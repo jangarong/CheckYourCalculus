@@ -59,7 +59,7 @@ class DEProof:
 
     def is_equal_to(self, eq1, eq2):
         eqs = self.sub_variables(eq1, eq2)
-        return sm.simplify(eqs[0]) == sm.simplify(eqs[1])
+        return sm.simplify(eqs[0] - eqs[1]) == 0
 
     """Inserts equation into the proof if it is valid."""
 
