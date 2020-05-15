@@ -18,12 +18,12 @@ class DEProof:
     def derive_epsilon(self):
         delta = sm.Symbol("delta")
         epsilon = sm.Symbol("epsilon")
-        self.epsilon_in_delta = sm.solve(sm.Eq(delta, self.delta), epsilon)[0]
+        self.epsilon_in_delta = sm.solve(sm.Eq(delta, self.delta_equation), self.epsilon)[0]
 
     """Set delta to something in terms of epsilon"""
 
     def let_delta_be(self, raw_equation):
-        self.delta = parse_latex(raw_equation)
+        self.delta_equation = parse_latex(raw_equation)
         self.derive_epsilon()
 
     """Prints all equations stored in LaTeX"""
@@ -49,9 +49,13 @@ class DEProof:
     def is_less_than(self, eq1, eq2):
         eqs = self.sub_variables(eq1, eq2)
 
+        # check zero case (0 < epsilon)
+        if sm.simplify(eq1) == 0 and sm.simplify(eq2) == sm.latex(self.epsilon):
+            return True
+
         # if first eq does not contain delta but the 2nd equation does
-        if not in_equation("\\delta", eq1) and in_equation("\\delta", eq2):
-            return sm.simplify(eqs[0]) <= sm.simplify(eqs[1])
+        if not in_equation(sm.latex(self.delta), eq1) and in_equation(sm.latex(self.delta), eq2):
+            return sm.simplify(eqs[0] - eqs[1]) == 0 or sm.simplify(eqs[0]) < sm.simplify(eqs[1])
         else:
             return sm.simplify(eqs[0]) < sm.simplify(eqs[1])
 
@@ -95,15 +99,38 @@ class DEProof:
         self.function = parse_latex(str_function)
         self.equations = []
 
-        # formulate equations for the proof (assume no infinity limits for now
+        if "-\\infty" in str_approaching[0]:
+            self.infinite_limit = 1
+            self.delta_inequality = parse_latex("x - " + str_approaching[0])  # please modify
+            self.equations.append(parse_latex(str_function + " - " + str_limit))  # please modify
 
-        # this is < /delta
-        self.delta_inequality = parse_latex("|" + "x - " + str_approaching[0] + "|")
+        elif "\\infty" in str_approaching[0]:
+            self.infinite_limit = -1
+            self.delta_inequality = parse_latex("x - " + str_approaching[0])  # please modify
+            self.equations.append(parse_latex(str_function + " - " + str_limit))  # please modify
 
-        # WTP: this is < /epsilon
-        self.equations.append(parse_latex("|" + str_function + " - " + str_limit + "|"))
+        elif len(str_approaching) > 1:
+            self.infinite_limit = 0
+
+            # if it's a right sided limit
+            if str_approaching[1] == "+":
+                self.delta_inequality = parse_latex("x - " + str_approaching[0])
+                self.equations.append(parse_latex(str_function + " - " + str_limit))
+
+            # if it's a left sided limit
+            elif str_approaching[1] == "-":
+                self.delta_inequality = parse_latex("-(" + "x - " + str_approaching[0] + ")")
+                self.equations.append(sm.simplify(parse_latex("-(" + str_function + " - " +
+                                                              str_limit + ")")))
+        else:
+            self.infinite_limit = 0
+            self.delta_inequality = parse_latex("| x - " + str_approaching[0] + "|")
+            self.equations.append(parse_latex("| " + str_function + " - " + str_limit + " |"))
 
         # variables that we need to set
         self.delta = sm.Symbol("delta")
         self.epsilon = sm.Symbol("epsilon")
+
+        # important equations
         self.epsilon_in_delta = None
+        self.delta_equation = None
