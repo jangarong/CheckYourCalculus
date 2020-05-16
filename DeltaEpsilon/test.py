@@ -36,5 +36,23 @@ pf.print_all_equations()
 
 # test case 4 - approaches infinite limit
 print("\nPROOF 4:")
-pf = DEProof("\\lim_{x \\to -\\infty} 1 = 14")
+pf = DEProof("\\lim_{x \\to \\infty} \\frac{3}{x^2} = 0")
+pf.insert_equation("< |\\frac{3}{N^2}|")
+pf.let_delta_be("\\sqrt{\\frac{3}{\\epsilon}}")
+pf.insert_equation("= |\\frac{3}{(\\sqrt{\\frac{3}{\\epsilon}})^2}|")
+pf.insert_equation("= |\\epsilon|")
+pf.insert_equation("= \\epsilon")
+pf.print_all_equations()
 
+# test case 5 - approaches infinite limit
+print("\nPROOF 5:")
+pf = DEProof("\\lim_{x \\to \\infty} \\frac{x + 1}{x} = 1")
+pf.insert_equation("= |\\frac{x + 1}{x} - \\frac{x}{x}|")
+pf.insert_equation("= |\\frac{x + 1 - x}{x}|")
+pf.insert_equation("= |\\frac{1}{x}|")
+pf.insert_equation("< |\\frac{1}{N}|") # problem
+pf.let_delta_be("\\frac{1}{\\epsilon}")
+pf.insert_equation("= |\\frac{1}{\\frac{1}{\\epsilon}}|")
+pf.insert_equation("= |\\epsilon|")
+pf.insert_equation("= \\epsilon")
+pf.print_all_equations()
