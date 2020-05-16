@@ -56,9 +56,22 @@ class DEProof:
 
         # if first eq does not contain delta but the 2nd equation does
         if not in_equation(sm.latex(self.delta), eq1) and in_equation(sm.latex(self.delta), eq2):
-            return sm.simplify(eqs[0] - eqs[1]) == 0 #or sm.simplify(eqs[1]) > sm.simplify(eqs[0])
+            return sm.simplify(eqs[0] - eqs[1]) == 0  # or sm.simplify(eqs[1]) > sm.simplify(eqs[0])
         else:
             return sm.simplify(eqs[0]) < sm.simplify(eqs[1])
+
+    def is_more_than(self, eq1, eq2):
+        eqs = self.sub_variables(eq1, eq2)
+
+        # check zero case (0 < epsilon)
+        if sm.simplify(eq1) == 0 and sm.simplify(eq2) == sm.latex(self.epsilon):
+            return True
+
+        # if first eq does not contain delta but the 2nd equation does
+        if not in_equation(sm.latex(self.delta), eq1) and in_equation(sm.latex(self.delta), eq2):
+            return sm.simplify(eqs[0] - eqs[1]) == 0  # or sm.simplify(eqs[1]) > sm.simplify(eqs[0])
+        else:
+            return sm.simplify(eqs[0]) > sm.simplify(eqs[1])
 
     """Check if equation1 = equation2"""
 
@@ -79,12 +92,20 @@ class DEProof:
                                                                                - 1]) + " <")
             self.equations.append(parse_latex(raw_equation[2:]))
 
+        # check if current equation > input equation
+        elif raw_equation[0] == ">" and self.is_more_than(self.equations[len(self.equations) - 1],
+                                                         equation):
+            self.equations[len(self.equations) - 1] = (sm.latex(self.equations[len(self.equations)
+                                                                               - 1]) + " >")
+            self.equations.append(parse_latex(raw_equation[2:]))
+
         # check if current equation = input equation
         elif raw_equation[0] == "=" and self.is_equal_to(self.equations[len(self.equations) - 1],
                                                          equation):
             self.equations[len(self.equations) - 1] = (sm.latex(self.equations[len(self.equations)
                                                                                - 1]) + " =")
             self.equations.append(parse_latex(raw_equation[2:]))
+
         else:
             print(str(raw_equation) + " is not a valid equation!")
 
@@ -104,21 +125,25 @@ class DEProof:
         self.function = parse_latex(str_function)
         self.equations = []
 
+        # status
+        self.is_infinite = 0
+        self.approaches_infinity = 0
+
         # check if x approaches negative infinity
         if "-\\infty" in str_approaching[0]:
-            self.infinite_limit = -1  # x < N
+            self.approaches_infinity = -1  # x < N
             self.delta_inequality = parse_latex("-|x|").subs("x", self.x)
             self.equations.append(parse_latex("| " + str_function + " - " + str_limit +
                                               " |"))
 
         # check if x approaches infinity
         elif "\\infty" in str_approaching[0]:
-            self.infinite_limit = 1  # x > N
+            self.approaches_infinity = 1  # x > N
             self.delta_inequality = parse_latex("|x|").subs("x", self.x)
             self.equations.append(parse_latex("| " + str_function + " - " + str_limit + " |"))
 
         elif len(str_approaching) > 1:
-            self.infinite_limit = 0
+            self.approaches_infinity = 0
 
             # if it's a right sided limit
             if str_approaching[1] == "+":
@@ -132,18 +157,36 @@ class DEProof:
                                                     ")").subs("x", self.x)
                 self.equations.append(parse_latex("-(" + str_function + " - " + str_limit + ")"))
         else:
-            self.infinite_limit = 0
+            self.approaches_infinity = 0
             self.delta_inequality = parse_latex("| x - " + str_approaching[0] +
                                                 "|").subs("x", self.x)
             self.equations.append(parse_latex("| " + str_function + " - " + str_limit + " |"))
 
+        # check if f(x) approaches negative infinity
+        if "-\\infty" == str_limit:
+            self.is_infinite = -1  # f(x) > -M
+            self.equations[0] = parse_latex(str_function)
+
+        # check if f(x) approaches infinity
+        elif "\\infty" == str_limit:
+            self.is_infinite = 1  # f(x) > M
+            self.equations[0] = parse_latex(str_function)
+
         # variables that we need to set
         self.str_to_symbol = {"x": self.x}
-        self.epsilon = sm.Symbol("epsilon", positive=True)  # > 0
-        self.str_to_symbol["epsilon"] = self.epsilon
-        if self.infinite_limit == 1:
+        if self.is_infinite != 0:
+            self.epsilon = sm.Symbol("M", positive=True)  # > 0
+            self.str_to_symbol["M"] = self.epsilon
+        else:
+            self.epsilon = sm.Symbol("epsilon", positive=True)  # > 0
+            self.str_to_symbol["epsilon"] = self.epsilon
+
+        # if it's an N-X proof
+        if self.approaches_infinity != 0:
             self.delta = sm.Symbol("N", positive=True)  # < x
             self.str_to_symbol["N"] = self.delta
+
+        # if it's an epsilon-X proof
         else:
             self.delta = sm.Symbol("delta", positive=True)  # > 0
             self.str_to_symbol["delta"] = self.delta
