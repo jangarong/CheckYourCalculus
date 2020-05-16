@@ -34,7 +34,7 @@ pf.insert_equation("= 2\\frac{\\epsilon}{2}")
 pf.insert_equation("= \\epsilon")
 pf.print_all_equations()
 
-# test case 4 - approaches infinite limit
+# test case 4 - x approaches infinity limit
 print("\nPROOF 4:")
 pf = DEProof("\\lim_{x \\to \\infty} \\frac{3}{x^2} = 0")
 pf.insert_equation("< |\\frac{3}{N^2}|")
@@ -44,7 +44,7 @@ pf.insert_equation("= |\\epsilon|")
 pf.insert_equation("= \\epsilon")
 pf.print_all_equations()
 
-# test case 5 - approaches infinite limit
+# test case 5 - x approaches infinity limit
 print("\nPROOF 5:")
 pf = DEProof("\\lim_{x \\to \\infty} \\frac{x + 1}{x} = 1")
 pf.insert_equation("= |\\frac{x + 1}{x} - \\frac{x}{x}|")
@@ -55,4 +55,13 @@ pf.let_delta_be("\\frac{1}{\\epsilon}")
 pf.insert_equation("= |\\frac{1}{\\frac{1}{\\epsilon}}|")
 pf.insert_equation("= |\\epsilon|")
 pf.insert_equation("= \\epsilon")
+pf.print_all_equations()
+
+# test case 6 - limit is infinity
+print("\nPROOF 6:")
+pf = DEProof("\\lim_{x \\to 0^+} \\frac{1}{x} = \\infty")
+pf.let_delta_be("\\frac{1}{M}")
+pf.insert_equation("> \\frac{1}{\\delta}")
+pf.insert_equation("= \\frac{1}{\\frac{1}{M}}")
+pf.insert_equation("= M")
 pf.print_all_equations()
