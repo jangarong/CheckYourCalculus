@@ -1,196 +1,137 @@
 import sympy as sm
 from sympy.parsing.latex import parse_latex
-import copy
+from DeltaEpsilon.variables import Variables
 
 
-def in_equation(latex_symbol, equation):
-    return latex_symbol in sm.latex(equation)
+class DeltaEpsilonProof(Variables):
+    """
+    DeltaEpsilonProof
+    """
 
+    """
+    ------------------------------------------------------------------
+    print_all: Prints all expressions stored in the proof.
+    ------------------------------------------------------------------
+    """
 
-"""
-DEProof - Delta Epsilon Proof
-Notes:
-parse_latex() removes useless zeros (i.e. |x - 0| turns into |x|)
-"""
-
-
-class DEProof:
-    """Determines what epsilon is in terms of delta"""
-
-    def derive_epsilon(self):
-        self.epsilon_in_delta = sm.solve(sm.Eq(self.delta, self.delta_equation), self.epsilon)[0]
-
-    """Set delta to something in terms of epsilon"""
-
-    def let_delta_be(self, raw_equation):
-        self.delta_equation = parse_latex(raw_equation).subs(self.str_to_symbol)  # delta = ???
-        self.derive_epsilon()
-
-    """Prints all equations stored in LaTeX"""
-
-    def print_all_equations(self):
+    def print_all(self):
         for equation in self.equations:
             print(sm.latex(equation))
 
-    """Substitutes epsilons and deltas in terms of the original function to verify equation"""
+    """
+    ------------------------------------------------------------------
+    is_less_than: Checks if ex1 > ex2, or if ex1 >= ex2, if ex2 
+    contains delta and ex1 does not.
+    ------------------------------------------------------------------
+    Parameters:
+        ex1: First expression
+        ex2: Second expression
+    Returns:
+        True if ex1 > ex2 (False otherwise)
+    ------------------------------------------------------------------
+    """
 
-    def sub_variables(self, eq1, eq2) -> list:
-        # substitute deltas and epsilons into each equation
-        eqs = [sm.simplify(copy.copy(eq1)).subs(self.str_to_symbol),
-               sm.simplify(copy.copy(eq2)).subs(self.str_to_symbol)]
-        for i in range(len(eqs)):
-            if self.epsilon_in_delta is not None:
-                eqs[i] = eqs[i].subs(self.epsilon, self.epsilon_in_delta)
-            if self.delta_inequality is not None:
-                eqs[i] = eqs[i].subs(self.delta, self.delta_inequality)
-        return eqs
-
-    """Check if equation1 < equation2"""
-
-    def is_less_than(self, eq1, eq2):
-        eqs = self.sub_variables(eq1, eq2)
+    def is_less_than(self, exp1, exp2):
 
         # check zero case (0 < epsilon)
-        if sm.simplify(eq1) == 0 and sm.simplify(eq2) == sm.latex(self.epsilon):
+        if sm.simplify(exp1) == 0 and sm.simplify(exp2) == sm.latex(self.epsilon):
             return True
 
+        exps = self.sub_exps(exp1, exp2)
         # if first eq does not contain delta but the 2nd equation does
-        if not in_equation(sm.latex(self.delta), eq1) and in_equation(sm.latex(self.delta), eq2):
-            return sm.simplify(eqs[0] - eqs[1]) == 0  # or sm.simplify(eqs[1]) > sm.simplify(eqs[0])
+        if str(self.delta) not in sm.latex(exp1) and str(self.delta) in sm.latex(exp2):
+            return sm.simplify(exps[0] - exps[1]) == 0  # or sm.simplify(exps[0]) <
+            # sm.simplify(exps[1])
         else:
-            return sm.simplify(eqs[0]) < sm.simplify(eqs[1])
+            return sm.simplify(exps[0]) < sm.simplify(exps[1])
 
-    def is_more_than(self, eq1, eq2):
-        eqs = self.sub_variables(eq1, eq2)
+    """
+    ------------------------------------------------------------------
+    is_more_than: Checks if ex1 < ex2, or if ex1 <= ex2, if ex2 
+    contains delta and ex1 does not.
+    ------------------------------------------------------------------
+    Parameters:
+        ex1: First expression
+        ex2: Second expression
+    Returns:
+        True if ex1 < ex2 (False otherwise)
+    ------------------------------------------------------------------
+    """
 
-        # check zero case (0 < epsilon)
-        if sm.simplify(eq1) == 0 and sm.simplify(eq2) == sm.latex(self.epsilon):
-            return True
+    def is_more_than(self, exp1, exp2):
 
         # if first eq does not contain delta but the 2nd equation does
-        if not in_equation(sm.latex(self.delta), eq1) and in_equation(sm.latex(self.delta), eq2):
-            return sm.simplify(eqs[0] - eqs[1]) == 0  # or sm.simplify(eqs[1]) > sm.simplify(eqs[0])
+        exps = self.sub_exps(exp1, exp2)
+        if str(self.delta) not in sm.latex(exp1) and str(self.delta) in sm.latex(exp2):
+            return sm.simplify(exps[0] - exps[1]) == 0  # or sm.simplify(exps[0]) >
+            # sm.simplify(exps[1])
         else:
-            return sm.simplify(eqs[0]) > sm.simplify(eqs[1])
+            return sm.simplify(exps[0]) > sm.simplify(exps[1])
 
-    """Check if equation1 = equation2"""
+    """
+    ------------------------------------------------------------------
+    is_equal_to: Checks if ex1 = ex2 after substitution.
+    ------------------------------------------------------------------
+    Parameters:
+        ex1: First expression
+        ex2: Second expression
+    ------------------------------------------------------------------
+    """
 
-    def is_equal_to(self, eq1, eq2):
-        eqs = self.sub_variables(eq1, eq2)
-        return sm.simplify(eqs[0] - eqs[1]) == 0
+    def is_equal_to(self, exp1, exp2):
+        exps = self.sub_exps(exp1, exp2)
+        return sm.simplify(exps[0] - exps[1]) == 0
 
-    """Inserts equation into the proof if it is valid."""
+    """
+    ------------------------------------------------------------------
+    insert: Inserts given expression only if the expression is
+    the same 
+    ------------------------------------------------------------------
+    Parameters:
+        latex_expression: The expression that we want to insert.
+    ------------------------------------------------------------------
+    """
 
-    def insert_equation(self, raw_equation):
-        # assuming "< equation" or "= equation"
-        equation = parse_latex(raw_equation[2:]).subs("x", self.x)
+    def insert(self, latex_expression: str):
+        expression = parse_latex(latex_expression[2:]).subs(self.sub_format_list)
 
-        # check if current equation < input equation
-        if raw_equation[0] == "<" and self.is_less_than(self.equations[len(self.equations) - 1],
-                                                        equation):
+        # check if current expression < input expression
+        if latex_expression[0] == "<" and self.is_less_than(self.equations[len(self.equations) - 1],
+                                                            expression):
             self.equations[len(self.equations) - 1] = (sm.latex(self.equations[len(self.equations)
                                                                                - 1]) + " <")
-            self.equations.append(parse_latex(raw_equation[2:]))
+            self.equations.append(parse_latex(latex_expression[2:]))
 
-        # check if current equation > input equation
-        elif raw_equation[0] == ">" and self.is_more_than(self.equations[len(self.equations) - 1],
-                                                         equation):
+        # check if current expression > input expression
+        elif latex_expression[0] == ">" and self.is_more_than(
+                self.equations[len(self.equations) - 1], expression):
             self.equations[len(self.equations) - 1] = (sm.latex(self.equations[len(self.equations)
                                                                                - 1]) + " >")
-            self.equations.append(parse_latex(raw_equation[2:]))
+            self.equations.append(parse_latex(latex_expression[2:]))
 
-        # check if current equation = input equation
-        elif raw_equation[0] == "=" and self.is_equal_to(self.equations[len(self.equations) - 1],
-                                                         equation):
+        # check if current expression = input expression
+        elif latex_expression[0] == "=" and self.is_equal_to(
+                self.equations[len(self.equations) - 1], expression):
             self.equations[len(self.equations) - 1] = (sm.latex(self.equations[len(self.equations)
                                                                                - 1]) + " =")
-            self.equations.append(parse_latex(raw_equation[2:]))
+            self.equations.append(parse_latex(latex_expression[2:]))
 
         else:
-            print(str(raw_equation) + " is not a valid equation!")
+            print(latex_expression + " is not a valid expression!")
 
-    """Creates Delta Epsilon Proof"""
+    """
+    ------------------------------------------------------------------
+    __init__: Initializes Delta Epsilon proof structure.
+    ------------------------------------------------------------------
+    Parameters:
+        latex_expression: The limit expressed in LaTeX.
+    ------------------------------------------------------------------
+    """
 
-    def __init__(self, raw_limit):
+    def __init__(self, latex_expression: str):
 
-        # set math variables for parsing
-        self.x = sm.Symbol("x", real=True)
+        # setup variables for proof structure
+        Variables.__init__(self, latex_expression)
 
-        # parse values
-        str_limit = raw_limit.split("=")[1][1:]
-        str_function = raw_limit.split("}", 1)[1].split("=")[0][1:]
-        str_approaching = raw_limit.split("\\to")[1].split("}")[0][1:].split("^")
-        self.limit = parse_latex(str_limit)
-        self.approaching = parse_latex(str_approaching[0])
-        self.function = parse_latex(str_function)
-        self.equations = []
-
-        # status
-        self.is_infinite = 0
-        self.approaches_infinity = 0
-
-        # check if x approaches negative infinity
-        if "-\\infty" in str_approaching[0]:
-            self.approaches_infinity = -1  # x < N
-            self.delta_inequality = parse_latex("-|x|").subs("x", self.x)
-            self.equations.append(parse_latex("| " + str_function + " - " + str_limit +
-                                              " |"))
-
-        # check if x approaches infinity
-        elif "\\infty" in str_approaching[0]:
-            self.approaches_infinity = 1  # x > N
-            self.delta_inequality = parse_latex("|x|").subs("x", self.x)
-            self.equations.append(parse_latex("| " + str_function + " - " + str_limit + " |"))
-
-        elif len(str_approaching) > 1:
-            self.approaches_infinity = 0
-
-            # if it's a right sided limit
-            if str_approaching[1] == "+":
-                self.delta_inequality = parse_latex("x - " + str_approaching[0]).subs("x", self.x)
-                self.equations.append(parse_latex(str_function + " - " +
-                                                  str_limit))
-
-            # if it's a left sided limit
-            elif str_approaching[1] == "-":
-                self.delta_inequality = parse_latex("-(" + "x - " + str_approaching[0] +
-                                                    ")").subs("x", self.x)
-                self.equations.append(parse_latex("-(" + str_function + " - " + str_limit + ")"))
-        else:
-            self.approaches_infinity = 0
-            self.delta_inequality = parse_latex("| x - " + str_approaching[0] +
-                                                "|").subs("x", self.x)
-            self.equations.append(parse_latex("| " + str_function + " - " + str_limit + " |"))
-
-        # check if f(x) approaches negative infinity
-        if "-\\infty" == str_limit:
-            self.is_infinite = -1  # f(x) > -M
-            self.equations[0] = parse_latex(str_function)
-
-        # check if f(x) approaches infinity
-        elif "\\infty" == str_limit:
-            self.is_infinite = 1  # f(x) > M
-            self.equations[0] = parse_latex(str_function)
-
-        # variables that we need to set
-        self.str_to_symbol = {"x": self.x}
-        if self.is_infinite != 0:
-            self.epsilon = sm.Symbol("M", positive=True)  # > 0
-            self.str_to_symbol["M"] = self.epsilon
-        else:
-            self.epsilon = sm.Symbol("epsilon", positive=True)  # > 0
-            self.str_to_symbol["epsilon"] = self.epsilon
-
-        # if it's an N-X proof
-        if self.approaches_infinity != 0:
-            self.delta = sm.Symbol("N", positive=True)  # < x
-            self.str_to_symbol["N"] = self.delta
-
-        # if it's an epsilon-X proof
-        else:
-            self.delta = sm.Symbol("delta", positive=True)  # > 0
-            self.str_to_symbol["delta"] = self.delta
-
-        # important equations
-        self.epsilon_in_delta = None
-        self.delta_equation = None
+        # store equations in a list
+        self.equations = [self.starting_equation]
