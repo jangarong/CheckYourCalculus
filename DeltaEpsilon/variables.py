@@ -37,8 +37,7 @@ class Variables:
         going to be equal to.
     Issues:
         When called more than once it has a problem with 
-        distinguishing "epsilon" and the symbol epsilon, thus causing
-        a crash. This also happens when working with infinity.
+        distinguishing "epsilon" and the symbol epsilon.
     ------------------------------------------------------------------
     """
 
