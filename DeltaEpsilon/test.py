@@ -29,7 +29,6 @@ from DeltaEpsilon.proof import DeltaEpsilonProof
 # pf.insert("= -2x + 8)")
 # pf.insert("= 2(4 - x)")
 # pf.insert("< 2\\delta")
-# pf.print_all()
 # pf.choose_delta("\\frac{\\epsilon}{2}")
 # pf.insert("= 2\\frac{\\epsilon}{2}")
 # pf.insert("= \\epsilon")
@@ -57,16 +56,16 @@ from DeltaEpsilon.proof import DeltaEpsilonProof
 # pf.insert("= |\\epsilon|")
 # pf.insert("= \\epsilon")
 # pf.print_all()
-#
-# # test case 6 - limit is infinity
-# print("\nPROOF 6:")
-# pf = DeltaEpsilonProof("\\lim_{x \\to 0^+} \\frac{1}{x} = \\infty")
-# pf.choose_delta("\\frac{1}{M}")
-# pf.insert("> \\frac{1}{\\delta}")
-# pf.insert("= \\frac{1}{\\frac{1}{M}}")
-# pf.insert("= M")
-# pf.print_all()
-#
+
+# test case 6 - limit is infinity
+print("\nPROOF 6:")
+pf = DeltaEpsilonProof("\\lim_{x \\to 0^+} \\frac{1}{x} = \\infty")
+pf.choose_delta("\\frac{1}{M}")
+pf.insert("> \\frac{1}{\\delta}")
+pf.insert("= \\frac{1}{\\frac{1}{M}}")
+pf.insert("= M")
+pf.print_all()
+
 # # test case 7 - limit is infinity, x approaches infinity
 # print("\nPROOF 6:")
 # pf = DeltaEpsilonProof("\\lim_{x \\to \\infty} 2(x + 2) = \\infty")

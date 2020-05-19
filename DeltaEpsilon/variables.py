@@ -152,7 +152,7 @@ class Variables:
         self.starting_equation = starting_equations[side]
 
         # setup substitutions
-        self.sub_format_list = [(str_epsilon[x0_inf], self.epsilon),
-                                (str_delta[fx_inf], self.delta),
+        self.sub_format_list = [(str_epsilon[fx_inf], self.epsilon),
+                                (str_delta[x0_inf], self.delta),
                                 ("x", self.x)]
         self.sub_list = [(self.delta, self.given.lhs)]
