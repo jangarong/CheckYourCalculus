@@ -67,7 +67,7 @@ pf.insert("= M")
 pf.print_all()
 
 # # test case 7 - limit is infinity, x approaches infinity
-# print("\nPROOF 6:")
+# print("\nPROOF 7:")
 # pf = DeltaEpsilonProof("\\lim_{x \\to \\infty} 2(x + 2) = \\infty")
 # pf.insert("= 2x + 4")
 # pf.insert("> 2x")
