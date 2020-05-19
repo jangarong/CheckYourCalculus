@@ -89,8 +89,13 @@ class Variables:
         limit = parse_latex(str_limit)
         fx = parse_latex(str_function)
 
-        # setup basic variables
-        self.x = sm.Symbol("x", real=True)
+        # setup x
+        possible_xs = [sm.Symbol("x", real=True),
+                       sm.Symbol("x", real=True, positive=True),
+                       sm.Symbol("x", real=True, negative=True)]
+        self.x = possible_xs[x0_inf]
+
+        # setup the other variables
         str_delta = ["delta", "N", "N"]
         str_epsilon = ["epsilon", "M", "M"]
         self.delta = sm.Symbol(str_delta[x0_inf], positive=True)
@@ -100,8 +105,8 @@ class Variables:
         givens = [[Relational(abs(self.x - x0), self.delta, "<"),
                    Relational(self.x - x0, self.delta, "<"),
                    Relational(x0 - self.x, self.delta, "<")],
-                  [Relational(abs(self.x), self.delta, ">")],
-                  [Relational(-abs(self.x), self.delta, ">")]]
+                  [Relational(self.x, self.delta, ">")],
+                  [Relational(-self.x, self.delta, ">")]]
 
         # possible conclusions
         conclusions = [[Relational(abs(fx - limit), self.epsilon, "<"),  # automatically simplifies?
