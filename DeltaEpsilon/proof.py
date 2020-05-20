@@ -80,7 +80,7 @@ class DeltaEpsilonProof(Variables):
 
     def is_equal_to(self, exp1, exp2):
         exps = self.sub_exps(exp1, exp2)
-        return sm.simplify(exps[0]) == sm.simplify(exps[1])
+        return sm.simplify(exps[0] - exps[1]) == 0
 
     """
     ------------------------------------------------------------------
@@ -95,27 +95,14 @@ class DeltaEpsilonProof(Variables):
     def insert(self, latex_expression: str):
         expression = parse_latex(latex_expression[2:]).subs(self.sub_format_list)
 
-        # check if current expression < input expression
-        if latex_expression[0] == "<" and self.is_less_than(self.equations[len(self.equations) - 1],
-                                                            expression):
-            self.equations[len(self.equations) - 1] = (sm.latex(self.equations[len(self.equations)
-                                                                               - 1]) + " <")
-            self.equations.append(parse_latex(latex_expression[2:]))
-
-        # check if current expression > input expression
-        elif latex_expression[0] == ">" and self.is_more_than(
-                self.equations[len(self.equations) - 1], expression):
-            self.equations[len(self.equations) - 1] = (sm.latex(self.equations[len(self.equations)
-                                                                               - 1]) + " >")
-            self.equations.append(parse_latex(latex_expression[2:]))
-
-        # check if current expression = input expression
-        elif latex_expression[0] == "=" and self.is_equal_to(
-                self.equations[len(self.equations) - 1], expression):
-            self.equations[len(self.equations) - 1] = (sm.latex(self.equations[len(self.equations)
-                                                                               - 1]) + " =")
-            self.equations.append(parse_latex(latex_expression[2:]))
-
+        # check if current expression <, > or = input expression
+        if ((latex_expression[0] == "<" and self.is_less_than(self.current_equation, expression)) or
+                (latex_expression[0] == ">" and self.is_more_than(self.current_equation,
+                                                                  expression)) or
+                (latex_expression[0] == "=" and self.is_equal_to(self.current_equation,
+                                                                 expression))):
+            self.equations.append(latex_expression)
+            self.current_equation = parse_latex(latex_expression[2:])
         else:
             print(latex_expression + " is not a valid expression!")
 
@@ -134,4 +121,5 @@ class DeltaEpsilonProof(Variables):
         Variables.__init__(self, latex_expression)
 
         # store equations in a list
-        self.equations = [self.starting_equation]
+        self.current_equation = self.starting_equation
+        self.equations = [sm.latex(self.starting_equation)]
