@@ -80,7 +80,7 @@ class DeltaEpsilonProof(Variables):
 
     def is_equal_to(self, exp1, exp2):
         exps = self.sub_exps(exp1, exp2)
-        return sm.simplify(exps[0] - exps[1]) == 0
+        return sm.simplify(exps[0]) == sm.simplify(exps[1])
 
     """
     ------------------------------------------------------------------
