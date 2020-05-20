@@ -35,15 +35,13 @@ class Variables:
     Parameters:
         latex_equation: The expression (in LaTeX) that delta is now 
         going to be equal to.
-    Issues:
-        When called more than once it has a problem with 
-        distinguishing "epsilon" and the symbol epsilon.
     ------------------------------------------------------------------
     """
 
     def choose_delta(self, latex_expression: str):
         delta_equation = sm.Eq(self.delta, parse_latex(latex_expression).subs(self.sub_format_list))
-        epsilon_expression = sm.solve(delta_equation, self.epsilon)[0]
+        epsilon_expression = (sm.solve(delta_equation, self.epsilon) +
+                              sm.solve(delta_equation, str(self.epsilon)))[0]
         self.sub_list.append((self.epsilon, epsilon_expression))
         self.sub_list.reverse()
 
