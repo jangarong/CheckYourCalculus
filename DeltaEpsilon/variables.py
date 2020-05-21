@@ -116,8 +116,8 @@ class Variables:
         starting_equations = [[parse_latex("| " + str_function + " - " + str_limit + " |"),
                               parse_latex(str_function + " - " + str_limit),
                               parse_latex(str_limit + " - " + str_function)],
-                              [Relational(fx, self.epsilon, ">").lhs] * 3,
-                              [Relational(-fx, self.epsilon, ">").lhs] * 3]
+                              [fx] * 3,
+                              [-fx] * 3]
 
         # setup equations
         self.given = givens[x0_inf][side]

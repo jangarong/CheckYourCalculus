@@ -5,7 +5,7 @@ from DeltaEpsilon.variables import Variables
 
 class DeltaEpsilonProof(Variables):
     """
-    DeltaEpsilonProof
+    DeltaEpsilon.DeltaEpsilonProof: Structure for
     """
 
     """
