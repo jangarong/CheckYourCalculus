@@ -14,7 +14,7 @@ print("\nPROOF 2:")
 pf = DeltaEpsilonProof("\\lim_{x \\to 4} 2(x + 3) = 14")
 pf.insert("= |2x + 6 - 14|")
 pf.insert("= |2x - 8|")
-pf.insert("= 2|x - 4|")
+pf.insert("= 2|x - 4|")  # says this is not valid ?!
 pf.insert("< 2\\delta")
 pf.choose_delta("\\frac{\\epsilon}{2}")
 pf.insert("= 2\\frac{\\epsilon}{2}")
@@ -47,7 +47,7 @@ pf.print_all()
 # test case 5 - x approaches infinity limit
 print("\nPROOF 5:")
 pf = DeltaEpsilonProof("\\lim_{x \\to \\infty} \\frac{x + 1}{x} = 1")
-pf.insert("= |\\frac{x + 1}{x} - \\frac{x}{x}|")
+pf.insert("= |\\frac{x + 1}{x} - \\frac{x}{x}|")  # automatic simplifcation?!
 pf.insert("= |\\frac{x + 1 - x}{x}|")
 pf.insert("= |\\frac{1}{x}|")
 pf.insert("< |\\frac{1}{N}|") # problem
@@ -75,4 +75,18 @@ pf.insert("> 2N")
 pf.choose_delta("\\frac{M}{2}")
 pf.insert("= 2\\frac{M}{2}")
 pf.insert("= M")
+pf.print_all()
+
+# test case 8 - constant function
+print("\nPROOF 8:")
+pf = DeltaEpsilonProof("\\lim_{x \\to 3} 6 = 6")
+pf.insert("= 0")
+pf.insert("< \\epsilon")
+pf.print_all()
+
+# test case 9 - constant function with infinity
+print("\nPROOF 9:")
+pf = DeltaEpsilonProof("\\lim_{x \\to \\infty} 9 = 9")
+pf.insert("= 0")
+pf.insert("< \\epsilon")
 pf.print_all()
