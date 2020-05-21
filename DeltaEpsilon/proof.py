@@ -5,33 +5,34 @@ from DeltaEpsilon.variables import Variables
 
 class DeltaEpsilonProof(Variables):
     """
-    DeltaEpsilon.DeltaEpsilonProof: Structure for
-    """
-
-    """
     ------------------------------------------------------------------
-    print_all: Prints all expressions stored in the proof.
+    DeltaEpsilon.DeltaEpsilonProof: Proof structure for Delta Epsilon
+    proofs.
     ------------------------------------------------------------------
     """
 
     def print_all(self):
+        """
+        ------------------------------------------------------------------
+        print_all: Prints all expressions stored in the proof.
+        ------------------------------------------------------------------
+        """
         for equation in self.equations:
             print(sm.latex(equation))
 
-    """
-    ------------------------------------------------------------------
-    is_less_than: Checks if ex1 > ex2, or if ex1 >= ex2, if ex2 
-    contains delta and ex1 does not.
-    ------------------------------------------------------------------
-    Parameters:
-        ex1: First expression
-        ex2: Second expression
-    Returns:
-        True if ex1 > ex2 (False otherwise)
-    ------------------------------------------------------------------
-    """
-
     def is_less_than(self, exp1, exp2):
+        """
+        ------------------------------------------------------------------
+        is_more_than: Checks if exp1 > ex2, or if exp1 >= exp2, if ex2
+        contains delta and exp1 does not.
+        ------------------------------------------------------------------
+        Parameters:
+            exp1: First expression
+            exp2: Second expression
+        Returns:
+            True if exp1 > exp2 (False otherwise)
+        ------------------------------------------------------------------
+        """
 
         # check zero case (0 < epsilon)
         if sm.simplify(exp1) == 0 and sm.simplify(exp2) == sm.latex(self.epsilon):
@@ -45,20 +46,19 @@ class DeltaEpsilonProof(Variables):
         else:
             return sm.simplify(exps[0]) < sm.simplify(exps[1])
 
-    """
-    ------------------------------------------------------------------
-    is_more_than: Checks if ex1 < ex2, or if ex1 <= ex2, if ex2 
-    contains delta and ex1 does not.
-    ------------------------------------------------------------------
-    Parameters:
-        ex1: First expression
-        ex2: Second expression
-    Returns:
-        True if ex1 < ex2 (False otherwise)
-    ------------------------------------------------------------------
-    """
-
     def is_more_than(self, exp1, exp2):
+        """
+        ------------------------------------------------------------------
+        is_more_than: Checks if exp1 < ex2, or if exp1 <= exp2, if ex2
+        contains delta and exp1 does not.
+        ------------------------------------------------------------------
+        Parameters:
+            exp1: First expression
+            exp2: Second expression
+        Returns:
+            True if exp1 < exp2 (False otherwise)
+        ------------------------------------------------------------------
+        """
 
         # if first eq does not contain delta but the 2nd equation does
         exps = self.sub_exps(exp1, exp2)
@@ -68,31 +68,29 @@ class DeltaEpsilonProof(Variables):
         else:
             return sm.simplify(exps[0]) > sm.simplify(exps[1])
 
-    """
-    ------------------------------------------------------------------
-    is_equal_to: Checks if ex1 = ex2 after substitution.
-    ------------------------------------------------------------------
-    Parameters:
-        ex1: First expression
-        ex2: Second expression
-    ------------------------------------------------------------------
-    """
-
     def is_equal_to(self, exp1, exp2):
+        """
+        ------------------------------------------------------------------
+        is_equal_to: Checks if exp1 = exp2 after substitution.
+        ------------------------------------------------------------------
+        Parameters:
+            exp1: First expression
+            exp2: Second expression
+        ------------------------------------------------------------------
+        """
         exps = self.sub_exps(exp1, exp2)
         return sm.simplify(exps[0] - exps[1]) == 0
 
-    """
-    ------------------------------------------------------------------
-    insert: Inserts given expression only if the expression is
-    the same 
-    ------------------------------------------------------------------
-    Parameters:
-        latex_expression: The expression that we want to insert.
-    ------------------------------------------------------------------
-    """
-
     def insert(self, latex_expression: str):
+        """
+        ------------------------------------------------------------------
+        insert: Inserts given expression only if the expression is
+        the same
+        ------------------------------------------------------------------
+        Parameters:
+            latex_expression: The expression that we want to insert.
+        ------------------------------------------------------------------
+        """
         expression = parse_latex(latex_expression[2:]).subs(self.sub_format_list)
 
         # check if current expression <, > or = input expression
@@ -106,16 +104,15 @@ class DeltaEpsilonProof(Variables):
         else:
             print(latex_expression + " is not a valid expression!")
 
-    """
-    ------------------------------------------------------------------
-    __init__: Initializes Delta Epsilon proof structure.
-    ------------------------------------------------------------------
-    Parameters:
-        latex_expression: The limit expressed in LaTeX.
-    ------------------------------------------------------------------
-    """
-
     def __init__(self, latex_expression: str):
+        """
+        ------------------------------------------------------------------
+        __init__: Initializes Delta Epsilon proof structure.
+        ------------------------------------------------------------------
+        Parameters:
+            latex_expression: The limit expressed in LaTeX.
+        ------------------------------------------------------------------
+        """
 
         # setup variables for proof structure
         Variables.__init__(self, latex_expression)
