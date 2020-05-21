@@ -24,8 +24,8 @@ class Variables:
             List that contains a copy of the two expressions.
         ------------------------------------------------------------------
         """
-        return [sm.simplify(copy.copy(exp1)).subs(self.sub_format_list).subs(self.sub_list),
-                sm.simplify(copy.copy(exp2)).subs(self.sub_format_list).subs(self.sub_list)]
+        return [sm.simplify(copy.copy(exp1).subs(self.sub_format_list).subs(self.sub_list)),
+                sm.simplify(copy.copy(exp2).subs(self.sub_format_list).subs(self.sub_list))]
 
     def bound_expression(self):
         """
@@ -36,8 +36,9 @@ class Variables:
         ------------------------------------------------------------------
         """
         eq_parts = self.bounding_equations[len(self.bounding_equations) - 1].split("\\leq")
-        self.sub_list.append((abs(parse_latex(eq_parts[1])).subs(self.sub_format_list),
-                              max(parse_latex(eq_parts[0]), parse_latex(eq_parts[2]))))
+        self.bounded_exp = (abs(parse_latex(eq_parts[1])).subs(self.sub_format_list),
+                            max(parse_latex(eq_parts[0]), parse_latex(eq_parts[2])))
+        self.sub_list.append(self.bounded_exp)
 
     def init_bound_delta(self, k: str):
         """
@@ -189,6 +190,7 @@ class Variables:
         self.delta_exp = ""
         self.delta_bound = 0
         self.curr_bounding_equation = None
+        self.bounded_exp = (None, None)
         self.bounding_equations = []
 
 

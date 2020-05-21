@@ -17,8 +17,14 @@ class DeltaEpsilonProof(Variables):
         print_all: Prints all expressions stored in the proof.
         ------------------------------------------------------------------
         """
+        print("===== PROOF: =====")
         for equation in self.equations:
             print(sm.latex(equation))
+
+        if len(self.bounding_equations) > 0:
+            print("===== ASIDE: =====")
+            for equation in self.bounding_equations:
+                print(sm.latex(equation))
 
     def is_less_than(self, exp1, exp2):
         """
@@ -39,10 +45,12 @@ class DeltaEpsilonProof(Variables):
             return True
 
         exps = self.sub_exps(exp1, exp2)
-        # if first eq does not contain delta but the 2nd equation does
-        if str(self.delta) not in sm.latex(exp1) and str(self.delta) in sm.latex(exp2):
-            return sm.simplify(exps[0] - exps[1]) == 0  # or sm.simplify(exps[0]) <
-            # sm.simplify(exps[1])
+        # if first eq does not contain delta but the 2nd equation does OR gets bounded by assumption
+        if ((str(self.delta) not in sm.latex(exp1) and str(self.delta) in sm.latex(exp2)) or
+                (sm.latex(self.bounded_exp[0]) is not None and sm.latex(self.bounded_exp[0]) in
+                 sm.latex(exp1) and sm.latex(self.bounded_exp[0]) not in sm.latex(exp2))):
+            return sm.Or(sm.simplify(exps[0] - exps[1]) == 0,
+                         sm.simplify(exps[0]) < sm.simplify(exps[1]))
         else:
             return sm.simplify(exps[0]) < sm.simplify(exps[1])
 
@@ -63,8 +71,8 @@ class DeltaEpsilonProof(Variables):
         # if first eq does not contain delta but the 2nd equation does
         exps = self.sub_exps(exp1, exp2)
         if str(self.delta) not in sm.latex(exp1) and str(self.delta) in sm.latex(exp2):
-            return sm.simplify(exps[0] - exps[1]) == 0  # or sm.simplify(exps[0]) >
-            # sm.simplify(exps[1])
+            return sm.Or(sm.simplify(exps[0] - exps[1]) == 0,
+                         sm.simplify(exps[0]) > sm.simplify(exps[1]))
         else:
             return sm.simplify(exps[0]) > sm.simplify(exps[1])
 
