@@ -112,19 +112,21 @@ class DeltaEpsilonProof(Variables):
         else:
             print(latex_expression + " is not a valid expression!")
 
-    def __init__(self, latex_expression: str):
+    def __init__(self, fx, x0, direction="+-"):
         """
         ------------------------------------------------------------------
         __init__: Initializes Delta Epsilon proof structure.
         ------------------------------------------------------------------
         Parameters:
-            latex_expression: The limit expressed in LaTeX.
+            fx: The given function we're taking the limit of.
+            x0: What x is approaching.
+            direction: In which direction x is approaching.
         ------------------------------------------------------------------
         """
 
         # setup variables for proof structure
-        Variables.__init__(self, latex_expression)
+        Variables.__init__(self, fx, x0, direction)
 
         # store equations in a list
         self.current_equation = self.starting_equation
-        self.equations = [sm.latex(self.starting_equation)]
+        self.equations = [self.str_starting_equation]
