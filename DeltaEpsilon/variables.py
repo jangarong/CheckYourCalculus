@@ -102,57 +102,32 @@ class Variables:
                               "(" + latex_expression + ", " +
                               str(self.delta_bound) + ")")
 
-    def __init__(self, latex_limit):
+    def __init__(self, fx, x0, direction="+-"):
         """
         ------------------------------------------------------------------
         __init__: Initializes variables for Delta Epsilon Proof.
         ------------------------------------------------------------------
         Parameters:
-            latex_limit: The limit expressed in LaTeX
+            fx: The given function we're taking the limit of.
+            x0: What x is approaching.
+            direction: In which direction x is approaching.
         ------------------------------------------------------------------
         """
-        # parse and setup variables
-        # split latex limit into different parts
-        str_limit = latex_limit.split("=")[1][1:]
-        str_function = latex_limit.split("}", 1)[1].split("=")[0][1:]
-        str_approaching = latex_limit.split("\\to")[1].split("}")[0][1:].split("^")
-
-        # check if x0 is approaching infinity
-        inf_dict = {"\\infty": 1, "-\\infty": 2}
-        if "\\infty" in str_approaching[0]:
-            x0_inf = inf_dict[str_approaching[0]]
+        if direction in ["+", "-"]:
+            limit = sm.limit(fx, sm.Symbol('x'), x0, direction)
         else:
-            x0_inf = 0
-
-        # check if f(x)'s limit is infinity
-        if "\\infty" in str_limit:
-            fx_inf = inf_dict[str_limit]
-        else:
-            fx_inf = 0
-
-        # check which side the limit is on
-        if len(str_approaching) > 1:
-            sign_dict = {"+": 1, "-": 2}
-            side = sign_dict[str_approaching[1]]
-        else:
-            side = 0
-
-        # parse to latex
-        x0 = parse_latex(str_approaching[0])
-        limit = parse_latex(str_limit)
-        fx = parse_latex(str_function)
+            limit = sm.limit(fx, sm.Symbol('x'), x0)
 
         # setup x
-        possible_xs = [sm.Symbol("x", real=True),
-                       sm.Symbol("x", real=True, positive=True),
-                       sm.Symbol("x", real=True, negative=True)]
-        self.x = possible_xs[x0_inf]
+        self.x = (sm.Symbol("x", real=True, positive=True) if x0 == sm.oo else
+                  sm.Symbol("x", real=True, negative=True) if x0 == - sm.oo else
+                  sm.Symbol("x", real=True))
 
         # setup the other variables
-        str_delta = ["delta", "N", "N"]
-        str_epsilon = ["epsilon", "M", "M"]
-        self.delta = sm.Symbol(str_delta[x0_inf], positive=True)
-        self.epsilon = sm.Symbol(str_epsilon[fx_inf], positive=True)
+        self.delta = sm.Symbol("N" if x0 == sm.oo or x0 == - sm.oo else "delta",
+                               positive=True)
+        self.epsilon = sm.Symbol("M" if limit == sm.oo or limit == - sm.oo else "epsilon",
+                                 positive=True)
 
         # possible givens
         givens = [[Relational(abs(self.x - x0), self.delta, "<"),
@@ -161,28 +136,36 @@ class Variables:
                   [Relational(self.x, self.delta, ">")],
                   [Relational(-self.x, self.delta, ">")]]
 
-        # possible conclusions
-        conclusions = [[Relational(abs(fx - limit), self.epsilon, "<"),  # automatically simplifies?
-                        Relational(fx - limit, self.epsilon, "<"),
-                        Relational(limit - fx, self.epsilon, "<")],
-                       [Relational(fx, self.epsilon, ">")] * 3,
-                       [Relational(-fx, self.epsilon, ">")] * 3]
+        # possible starting equations
+        str_starting_equations = [["|" + sm.latex(fx) + "-" + sm.latex(limit) + "|",
+                                   sm.latex(fx) + "-" + sm.latex(limit),
+                                   sm.latex(limit) + "-" + sm.latex(fx)],
+                                  [sm.latex(fx)] * 3,
+                                  [sm.latex(-fx)] * 3]
 
-        # possible starting equations (simplify this if possible)
-        starting_equations = [[parse_latex("| " + str_function + " - " + str_limit + " |"),
-                              parse_latex(str_function + " - " + str_limit),
-                              parse_latex(str_limit + " - " + str_function)],
+        # possible starting equations
+        starting_equations = [[abs(fx - limit),
+                              fx - limit,
+                              limit - fx],
                               [fx] * 3,
                               [-fx] * 3]
 
+        # dictionary for side
+        side_dict = {"+-": 0,
+                     "+": 1,
+                     "-": 2}
+        side = side_dict[direction]
+        x0_inf = 1 if x0 == sm.oo else 2 if x0 == - sm.oo else 0
+        fx_inf = 1 if limit == sm.oo else 2 if limit == - sm.oo else 0
+
         # setup equations
         self.given = givens[x0_inf][side]
-        self.conclusion = conclusions[fx_inf][side]
         self.starting_equation = starting_equations[fx_inf][side]
+        self.str_starting_equation = str_starting_equations[fx_inf][side]
 
         # setup substitutions
-        self.sub_format_list = [(str_epsilon[fx_inf], self.epsilon),
-                                (str_delta[x0_inf], self.delta),
+        self.sub_format_list = [(str(self.epsilon), self.epsilon),
+                                (str(self.delta), self.delta),
                                 ("x", self.x)]
         self.sub_list = [(self.delta, self.given.lhs)]
 
