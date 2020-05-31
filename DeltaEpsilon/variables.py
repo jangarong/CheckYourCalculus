@@ -113,10 +113,17 @@ class Variables:
             direction: In which direction x is approaching.
         ------------------------------------------------------------------
         """
+        # evaluate limit
         if direction in ["+", "-"]:
             limit = sm.limit(fx, sm.Symbol('x'), x0, direction)
         else:
             limit = sm.limit(fx, sm.Symbol('x'), x0)
+
+        # save variables
+        self.fx = fx
+        self.x0 = x0
+        self.direction = direction
+        self.limit = limit
 
         # setup x
         self.x = (sm.Symbol("x", real=True, positive=True) if x0 == sm.oo else
