@@ -114,10 +114,13 @@ class Variables:
         ------------------------------------------------------------------
         """
         # evaluate limit
-        if direction in ["+", "-"]:
-            limit = sm.limit(fx, sm.Symbol('x'), x0, direction)
-        else:
-            limit = sm.limit(fx, sm.Symbol('x'), x0)
+        try:
+            limit = sm.limit(fx, sm.Symbol('x'), x0, dir=direction)
+
+        # limit does not exist
+        except ValueError:
+            self.L = sm.Symbol("l")
+            limit = self.L
 
         # save variables
         self.fx = fx
