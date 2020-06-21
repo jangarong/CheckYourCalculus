@@ -40,54 +40,54 @@ class Variables:
                             max(parse_latex(eq_parts[0]), parse_latex(eq_parts[2])))
         self.sub_list.append(self.bounded_exp)
 
-    def init_bound_delta(self, k: str):
+    def init_bound_delta(self, k):
         """
         ------------------------------------------------------------------
         bound_delta: Bounds delta from above by constant.
         ------------------------------------------------------------------
         Parameters:
-            k: Constant in string.
+            k: Constant (from sympy module)
         ------------------------------------------------------------------
         """
-        self.delta_bound = parse_latex(k)  # this is >= delta
-        self.curr_bounding_equation = abs_to_x(self.given.lhs, parse_latex(k))
-        self.bounding_equations.append(sm.latex(self.delta) + " \\leq " + k)
-        self.bounding_equations.append(sm.latex(self.given.lhs) + " \\leq " + k)
+        self.delta_bound = k  # this is >= delta
+        self.curr_bounding_equation = abs_to_x(self.given.lhs, k)
+        self.bounding_equations.append(sm.latex(self.delta) + " \\leq " + sm.latex(k))
+        self.bounding_equations.append(sm.latex(self.given.lhs) + " \\leq " + sm.latex(k))
 
-    def insert_bound_equation(self, latex_equation: str):
+    def insert_bound_equation(self, f1, f2, f3):
         """
         ------------------------------------------------------------------
         insert_bound_equation: Bounds delta from above by constant.
         ------------------------------------------------------------------
         Parameters:
-            latex_equation: Double inequality that is equivalent to the
-            current bounding equation.
+            f1: Function that is less than or equal to f2.
+            f2: Function that is between f1 and f3.
+            f3: Function that is greater than or equal to f2.
+            Or f1 <= f2 <= f3 for all x.
         ------------------------------------------------------------------
         """
-        exps = latex_equation.split("\\leq")  # should be length 3
-        curr_isolate_x = double_inequality_to_x(parse_latex(exps[0]),
-                                                parse_latex(exps[1]),
-                                                parse_latex(exps[2]))
-
+        curr_isolate_x = double_inequality_to_x(f1,
+                                                f2,
+                                                f3)
+        latex_equation = sm.latex(f1) + " \\leq " + sm.latex(f2) + " \\leq " + sm.latex(f3)
         if self.curr_bounding_equation == curr_isolate_x:
             self.curr_bounding_equation = curr_isolate_x
             self.bounding_equations.append(latex_equation)
         else:
             print(latex_equation + " is not a valid expression!")
 
-    def choose_delta(self, latex_expression: str):
+    def choose_delta(self, expr):
         """
         ------------------------------------------------------------------
         choose_delta: Uses the equation (which contains epsilon) to choose
         what delta is.
         ------------------------------------------------------------------
         Parameters:
-            latex_expression: The expression (in LaTeX) that delta is now
-            going to be equal to.
+            expr: The expression that delta is now going to be equal to.
         ------------------------------------------------------------------
         """
         # add the substitution list
-        delta_equation = sm.Eq(self.delta, parse_latex(latex_expression).subs(self.sub_format_list))
+        delta_equation = sm.Eq(self.delta, expr.subs(self.sub_format_list))
         epsilon_expression = (sm.solve(delta_equation, self.epsilon) +
                               sm.solve(delta_equation, str(self.epsilon)))[0]
         self.sub_list.append((self.epsilon, epsilon_expression))
@@ -95,11 +95,11 @@ class Variables:
 
         # add element
         if self.delta_bound != 0:
-            self.delta_exp = str(self.delta) + " = " + latex_expression
+            self.delta_exp = str(self.delta) + " = " + sm.latex(expr)
         else:
             self.delta_exp = (str(self.delta) + " = " +
                               {"M": "max", "epsilon": "min"}[str(self.epsilon)] +
-                              "(" + latex_expression + ", " +
+                              "(" + sm.latex(expr) + ", " +
                               str(self.delta_bound) + ")")
 
     def __init__(self, fx, x0, direction="+-"):

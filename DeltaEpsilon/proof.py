@@ -1,5 +1,4 @@
 import sympy as sm
-from sympy.parsing.latex import parse_latex
 from DeltaEpsilon.variables import Variables
 
 
@@ -89,28 +88,27 @@ class DeltaEpsilonProof(Variables):
         exps = self.sub_exps(exp1, exp2)
         return sm.simplify(exps[0] - exps[1]) == 0
 
-    def insert(self, latex_expression: str):
+    def insert(self, eq: str, expr):
         """
         ------------------------------------------------------------------
         insert: Inserts given expression only if the expression is
         the same
         ------------------------------------------------------------------
         Parameters:
-            latex_expression: The expression that we want to insert.
+            eq: equality symbol (either =, <, >).
+            expr: The expression that we want to insert.
         ------------------------------------------------------------------
         """
-        expression = parse_latex(latex_expression[2:]).subs(self.sub_format_list)
+        curr_expr = expr.subs(self.sub_format_list)
 
         # check if current expression <, > or = input expression
-        if ((latex_expression[0] == "<" and self.is_less_than(self.current_equation, expression)) or
-                (latex_expression[0] == ">" and self.is_more_than(self.current_equation,
-                                                                  expression)) or
-                (latex_expression[0] == "=" and self.is_equal_to(self.current_equation,
-                                                                 expression))):
-            self.equations.append(latex_expression)
-            self.current_equation = parse_latex(latex_expression[2:])
+        if ((eq == "<" and self.is_less_than(self.current_equation, curr_expr)) or
+                (eq == ">" and self.is_more_than(self.current_equation, curr_expr)) or
+                (eq == "=" and self.is_equal_to(self.current_equation, curr_expr))):
+            self.equations.append(eq + " " + sm.latex(curr_expr))
+            self.current_equation = curr_expr
         else:
-            print(latex_expression + " is not a valid expression!")
+            print(sm.latex(curr_expr) + " is not a valid expression!")
 
     def __init__(self, fx, x0, direction="+-"):
         """
