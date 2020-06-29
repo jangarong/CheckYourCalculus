@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template, request
 
 
 def create_app():
@@ -6,10 +6,16 @@ def create_app():
 
     @app.route('/')
     def root():
-        return 'Something about the app...'
+        return render_template('index.html')
 
-    @app.route('/deltaepsilon')
+    @app.route('/derivatives')
     def delta_epsilon():
-        return 'Delta epsilon proofs go here...'
+        return render_template('derivatives.html', equation="")
+
+    @app.route('/derivatives', methods=['POST'])
+    def delta_epsilon_input():
+        text = request.form['text']
+        return render_template('derivatives.html', equation=text)
 
     return app
+
