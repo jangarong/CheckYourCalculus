@@ -2,7 +2,7 @@ import sympy as sm
 from DeltaEpsilon.variables import Variables
 
 
-class DeltaEpsilonProof(Variables):
+class Proof(Variables):
     """
     ------------------------------------------------------------------
     DeltaEpsilon.DeltaEpsilonProof: Proof structure for Delta Epsilon

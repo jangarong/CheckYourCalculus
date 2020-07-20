@@ -1,9 +1,9 @@
 import random
 import function_generator as fg
-from DeltaEpsilon.proof import DeltaEpsilonProof
+from DeltaEpsilon.proof import Proof
 
 
-def question():
+def question(polynomial=False, rational=False):
     """
     ------------------------------------------------------------------
     Delta.Epsilon.question: Creates a Delta Epsilon proof where you
