@@ -1,6 +1,6 @@
 from DeltaEpsilon.questions import question
-from DeltaEpsilon.proof import DeltaEpsilonProof
-from DeltaEpsilon import latex_to_limit
+from DeltaEpsilon.proof import Proof
+from DeltaEpsilon.parsing import latex_to_limit
 
 
 def delta_epsilon_ui(proof):
@@ -49,7 +49,7 @@ def choice_1():
                        "3. Go Back.\n")
 
         if choice == str(1):
-            p = DeltaEpsilonProof(*latex_to_limit(input("Type in your LaTeX limit.\n")))
+            p = Proof(*latex_to_limit(input("Type in your LaTeX limit.\n")))
             delta_epsilon_ui(p)
 
         elif choice == str(2):
