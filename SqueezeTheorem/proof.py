@@ -9,6 +9,24 @@ class Proof:
     ------------------------------------------------------------------
     """
 
+    def print_all(self):
+        """
+        ------------------------------------------------------------------
+        pop: Prints all equations plus added work.
+        ------------------------------------------------------------------
+        """
+        for equation in self.equations:
+            print(sm.latex(equation[0]) + " \\leq " + sm.latex(equation[1]) + " \\leq " +
+                  sm.latex(equation[2]))
+
+        if self.finish:
+            latex_lim = "\\lim_{x \\to " + sm.latex(self.x0) + "} "
+            print(latex_lim + sm.latex(self.equations[-1][0]) + " \\leq " + latex_lim +
+                  sm.latex(self.equations[-1][1]) + " \\leq " + latex_lim +
+                  sm.latex(self.equations[-1][2]))
+            print(sm.latex(self.limit) + " \\leq " + latex_lim +
+                  sm.latex(self.equations[-1][1]) + " \\leq " + sm.latex(self.limit))
+
     def pop(self):
         """
         ------------------------------------------------------------------
@@ -21,7 +39,7 @@ class Proof:
         if self.equations:
             return self.equations.pop(len(self.equations) - 1)
         else:
-            print("No equations to remove!")
+            print("Either no equations to remove or question is already one.")
             return None
 
     def eval(self):
@@ -38,8 +56,10 @@ class Proof:
             if l1 == l3:
                 self.finish = True
                 self.limit = l1
+            else:
+                print("Cannot apply squeeze theorem. Limits aren't the same.")
         else:
-            print("Cannot apply squeeze theorem. Limits are not the same/no equations in list.")
+            print("Cannot apply squeeze theorem. No equations in list.")
 
     def insert(self, f1, f2, f3):
         """
@@ -78,10 +98,11 @@ class Proof:
         """
 
         # store equations in a list and make parameters public variables
-        self.equations = []
+        self.equations = [] # stores functions in tuples
         self.direction = direction
         self.x0 = x0
         self.fx = fx
         self.finish = False
         self.limit = 0
         self.x = sm.Symbol("x", real=True)
+
