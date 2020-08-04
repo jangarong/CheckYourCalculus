@@ -94,7 +94,7 @@ class Variables:
         self.sub_list.reverse()
 
         # add element
-        if self.delta_bound != 0:
+        if self.delta_bound == 0:
             self.delta_exp = str(self.delta) + " = " + sm.latex(expr)
         else:
             self.delta_exp = (str(self.delta) + " = " +
@@ -185,6 +185,4 @@ class Variables:
         self.curr_bounding_equation = None
         self.bounded_exp = (None, None)
         self.bounding_equations = []
-
-
 
