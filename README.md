@@ -1,2 +1,2 @@
-# CheckYourCalculus
-First Year Calculus tool for constructing answers to introductory calculus courses.
+# csmathtools
+Tools for CS/Math courses.
