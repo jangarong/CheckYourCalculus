@@ -17,6 +17,7 @@ class Proof(Variables):
         ------------------------------------------------------------------
         """
         print("===== PROOF: =====")
+        print(self.delta_exp)
         for equation in self.equations:
             print(sm.latex(equation))
 
