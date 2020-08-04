@@ -83,6 +83,8 @@ class Proof(Variables):
         Parameters:
             exp1: First expression
             exp2: Second expression
+        Returns:
+            Whether both equations are equal to each other or not.
         ------------------------------------------------------------------
         """
         exps = self.sub_exps(exp1, exp2)
