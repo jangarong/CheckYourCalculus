@@ -95,12 +95,13 @@ class Variables:
 
         # add element
         if self.delta_bound == 0:
-            self.delta_exp = str(self.delta) + " = " + sm.latex(expr)
+            self.delta_exp_latex = str(self.delta) + " = " + sm.latex(expr)
         else:
-            self.delta_exp = (str(self.delta) + " = " +
+            self.delta_exp_latex = (str(self.delta) + " = " +
                               {"M": "max", "epsilon": "min"}[str(self.epsilon)] +
                               "(" + sm.latex(expr) + ", " +
                               str(self.delta_bound) + ")")
+        self.delta_exp = expr.subs(self.sub_format_list)
 
     def __init__(self, fx, x0, direction="+-"):
         """
@@ -180,7 +181,8 @@ class Variables:
         self.sub_list = [(self.delta, self.given.lhs)]
 
         # store what delta is
-        self.delta_exp = ""
+        self.delta_exp_latex = ""
+        self.delta_exp = None
         self.delta_bound = 0
         self.curr_bounding_equation = None
         self.bounded_exp = (None, None)
