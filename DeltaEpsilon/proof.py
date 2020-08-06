@@ -16,15 +16,15 @@ class Proof(Variables):
         print_all: Prints all expressions stored in the proof.
         ------------------------------------------------------------------
         """
-        print("===== PROOF: =====")
-        print(self.delta_exp_latex)
+        print("\\textsc{Proof:}\\\\")
+        print("$" + self.delta_exp_latex + "$ \\\\")
         for equation in self.equations:
-            print(sm.latex(equation))
+            print("$" + sm.latex(equation) + "$ \\\\")
 
         if len(self.bounding_equations) > 0:
-            print("===== ASIDE: =====")
+            print("\\textsc{Aside:}\\\\")
             for equation in self.bounding_equations:
-                print(sm.latex(equation))
+                print("$" + sm.latex(equation) + "$ \\\\")
 
     def is_less_than(self, exp1, exp2):
         """
