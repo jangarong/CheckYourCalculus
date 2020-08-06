@@ -95,9 +95,9 @@ class Variables:
 
         # add element
         if self.delta_bound == 0:
-            self.delta_exp_latex = str(self.delta) + " = " + sm.latex(expr)
+            self.delta_exp_latex = "\\" + str(self.delta) + " = " + sm.latex(expr)
         else:
-            self.delta_exp_latex = (str(self.delta) + " = " +
+            self.delta_exp_latex = "\\" + (str(self.delta) + " = " +
                               {"M": "max", "epsilon": "min"}[str(self.epsilon)] +
                               "(" + sm.latex(expr) + ", " +
                               str(self.delta_bound) + ")")
