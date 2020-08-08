@@ -1,8 +1,9 @@
 import sympy as sm
 from DeltaEpsilon.variables import Variables
+from DeltaEpsilon.graphs import Graphs
 
 
-class Proof(Variables):
+class Proof(Variables, Graphs):
     """
     ------------------------------------------------------------------
     DeltaEpsilon.DeltaEpsilonProof: Proof structure for Delta Epsilon
