@@ -31,6 +31,8 @@ class Graphs:
 
             # find delta/epsilon bounds
             input_delta = self.delta_exp.subs(self.epsilon, input_epsilon)
+            if self.delta_bound != 0 and input_delta > self.delta_bound:
+                input_delta = self.delta_bound
             y_upper_bound = self.limit + input_epsilon
             y_lower_bound = self.limit - input_epsilon
             x_upper_bound = self.x0 + input_delta
@@ -57,7 +59,7 @@ class Graphs:
                              ylim=(self.limit - input_epsilon * 3, self.limit + input_epsilon * 3),
                              line_color="black")
 
-            # plot graphs
+            # merge graphs
             fx_graph.extend(x_lower_graph)
             fx_graph.extend(x_upper_graph)
             fx_graph.extend(y_upper_graph)

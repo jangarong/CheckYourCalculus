@@ -94,8 +94,13 @@ class Variables:
         self.sub_list.reverse()
 
         # add element
+        if str(self.delta) == "delta":
+            delta_latex = "\\" + str(self.delta)
+        else:
+            delta_latex = str(self.delta)
+
         if self.delta_bound == 0:
-            self.delta_exp_latex = "\\" + str(self.delta) + " = " + sm.latex(expr)
+            self.delta_exp_latex = delta_latex + " = " + sm.latex(expr)
         else:
             self.delta_exp_latex = "\\" + (str(self.delta) + " = " +
                               {"M": "max", "epsilon": "min"}[str(self.epsilon)] +
