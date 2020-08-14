@@ -1,5 +1,5 @@
 # csmathtools
-Author: [Jan Garong](https://github.com/jangarong)
+Authors: [Jan Garong](https://github.com/jangarong), [Vivek Kandathil](https://github.com/vivekandathil)
 
 Tools for CS/Math courses.
 
