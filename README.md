@@ -3,4 +3,9 @@ Authors: [Jan Garong](https://github.com/jangarong), [Vivek Kandathil](https://g
 
 Tools for CS/Math courses.
 
-Website coming soon.
+# Website
+
+## Live Equation Editor
+Create LaTeX math equations and have them be rendered instantly
+
+![](save1.gif)
