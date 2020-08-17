@@ -14,7 +14,7 @@ pf.choose_delta(parse_latex("\\frac{\\epsilon}{2}"))
 pf.insert(*insert_expr_latex("= 2\\frac{\\epsilon}{2}"))  # epsilon auto simplifies
 pf.insert(*insert_expr_latex("= \\epsilon"))
 pf.print_all()
-pf.plot('../samples/open.png', 5)
+pf.plot('../samples/open2.png', 5)
 
 # test case 5 - x approaches infinity limit
 print("\nPROOF 5:")
@@ -28,6 +28,7 @@ pf.insert(*insert_expr_latex("= |\\frac{1}{\\frac{1}{\\epsilon}}|"))
 pf.insert(*insert_expr_latex("= |\\epsilon|"))
 pf.insert(*insert_expr_latex("= \\epsilon"))
 pf.print_all()
+pf.plot('../samples/open5.png', 8)
 
 # test case 6 - limit is infinity
 print("\nPROOF 6:")
@@ -37,6 +38,7 @@ pf.insert(*insert_expr_latex("> \\frac{1}{\\delta}"))
 pf.insert(*insert_expr_latex("= \\frac{1}{\\frac{1}{M}}"))
 pf.insert(*insert_expr_latex("= M"))
 pf.print_all()
+pf.plot('../samples/open6.png', 1)
 
 # test case 7 - limit is infinity, x approaches infinity
 print("\nPROOF 7:")
@@ -48,6 +50,7 @@ pf.choose_delta(parse_latex("\\frac{M}{2}"))
 pf.insert(*insert_expr_latex("= 2\\frac{M}{2}"))
 pf.insert(*insert_expr_latex("= M"))
 pf.print_all()
+pf.plot('../samples/open7.png', 1)
 
 # test case 10 - delta assumption
 print("\nPROOF 10:")
@@ -64,4 +67,4 @@ pf.insert(*insert_expr_latex("< 5\\delta"))
 pf.insert(*insert_expr_latex("= 5\\frac{\\epsilon}{5}"))
 pf.insert(*insert_expr_latex("= \\epsilon"))
 pf.print_all()
-pf.plot('../samples/open2.png', 6)
+pf.plot('../samples/open10.png', 8)
