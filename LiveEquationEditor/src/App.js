@@ -8,34 +8,27 @@ import { makeStyles } from '@material-ui/core/styles';
 import { DropzoneArea } from 'material-ui-dropzone';
 import { useDropzone } from 'react-dropzone';
 
-
-
+import ReactLoading from 'react-loading';
+import Wave from 'react-wavify'
 
 function App() {
 
   const classes = useStyles();
-
   const [latex, setLatex] = React.useState('\\text{Type your } \\LaTeX \\text{ code below, view it here!}');
-
   const [files, setFiles] = React.useState([]);
-
-
-
-
 
   return (
     <div className="App">
-      <h1 style={{ fontFamily: 'Roboto' }}>LaTeX Editor</h1>
+      <h1 style={{ fontFamily: 'Roboto' }}>Live Equation Editor</h1>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 40 }} >
 
         <Paper style={{ height: 100, width: '60%', padding: 10 }} elevation={3} >
-          <BlockMath math={String.raw`${latex}`}
+          <BlockMath math={(latex === "") ? `\\mathbb{CLEAR}` : String.raw`${latex}`}
             renderError={(error) => {
-              return <b>{error.name}: Still typing?</b>
+              return (<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 10 }}><ReactLoading type={"bubbles"} color={'#7303c0'} height={'5%'} width={'5%'} /></div>)
             }}
             errorColor={'#7303c0'} />
         </Paper>
-
       </div>
       <TextField
         id="outlined-multiline-static"
@@ -50,11 +43,11 @@ function App() {
           setLatex(event.target.value);
         }}
         className={classes.latexInput}
+        style={{ marginTop: 50 }}
       />
-      <ButtonGroup size="large" orientation="vertical" aria-label="large outlined primary button group">
-        <Button className={classes.button}>Save LaTeX</Button>
+      <ButtonGroup size="large" orientation="vertical" aria-label="large outlined primary button group" style={{ marginTop: 50 }}>
         <Button className={classes.button}>Save as Image</Button>
-        <Button className={classes.button}>CLEAR</Button>
+        <Button className={classes.button} onClick={() => setLatex("")}>CLEAR</Button>
       </ButtonGroup>
       <DropzoneArea
         filesLimit={1}
@@ -63,6 +56,14 @@ function App() {
           setFiles(fileArray);
         }}
       />
+      <Wave fill="url(#gradient)">
+        <defs>
+          <linearGradient id="gradient" gradientTransform="rotate(90)">
+            <stop offset="10%" stopColor="#ec38bc" />
+            <stop offset="90%" stopColor="#7303c0" />
+          </linearGradient>
+        </defs>
+      </Wave>
     </div>
   );
 }
@@ -79,7 +80,7 @@ const useStyles = makeStyles({
     marginBottom: 10
   },
   latexInput: {
-    height: 300,
+    height: 210,
     width: '48%',
     margin: 30,
   },
