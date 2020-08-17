@@ -26,44 +26,72 @@ class Graphs:
         #   directory vs. file
         x = sm.Symbol('x')
         y = sm.Symbol('y')
+        graphs_extend = []
 
+        # if proof is done
         if self.current_equation == self.epsilon:
 
             # find delta/epsilon bounds
             input_delta = self.delta_exp.subs(self.epsilon, input_epsilon)
-            if self.delta_bound != 0 and input_delta > self.delta_bound:
-                input_delta = self.delta_bound
-            y_upper_bound = self.limit + input_epsilon
-            y_lower_bound = self.limit - input_epsilon
-            x_upper_bound = self.x0 + input_delta
-            x_lower_bound = self.x0 - input_delta
 
-            # create graphs
-            y_upper_graph = splot(y_upper_bound, show=False, line_color="red")
-            y_lower_graph = splot(y_lower_bound, show=False, line_color="red")
-            x_upper_graph = plot_implicit(sm.Eq(x, x_upper_bound),
-                                          (x, self.x0 - input_delta * 3,
-                                           self.x0 + input_delta * 3),
-                                          (y, self.limit - input_epsilon * 3,
-                                           self.limit + input_epsilon * 3),
-                                          line_color="blue", show=False)
-            x_lower_graph = plot_implicit(sm.Eq(x, x_lower_bound),
-                                          (x, self.x0 - x_lower_bound * 3,
-                                           self.x0 + x_lower_bound * 3),
-                                          (y, self.limit - input_epsilon * 3,
-                                           self.limit + input_epsilon * 3),
-                                          line_color="blue", show=False)
+            # is it delta?
+            if str(self.delta) == 'delta':
 
-            fx_graph = splot(self.fx, show=False, xlim=(self.x0 - x_lower_bound * 3,
-                                                        self.x0 + x_lower_bound * 3),
-                             ylim=(self.limit - input_epsilon * 3, self.limit + input_epsilon * 3),
-                             line_color="black")
+                # is it bounded?
+                if self.delta_bound != 0 and input_delta > self.delta_bound:
+                    input_delta = self.delta_bound
+
+                # create bounds
+                x_upper_bound = self.x0 + input_delta
+                x_lower_bound = self.x0 - input_delta
+                x_dim = (x, self.x0 - input_delta * 3, self.x0 + input_delta * 3)
+
+            # is it N?
+            else:
+                if self.x0 == sm.oo:
+                    x_lower_bound = input_delta
+                    x_upper_bound = None
+                    x_dim = (
+                        x, x_lower_bound - x_lower_bound * 0.5, x_lower_bound + x_lower_bound * 0.5)
+                else:
+                    x_lower_bound = None
+                    x_upper_bound = input_delta
+                    x_dim = (
+                        x, x_upper_bound - x_upper_bound * 0.5, x_upper_bound + x_upper_bound * 0.5)
+
+            # is it epsilon?
+            if str(self.epsilon) == 'epsilon':
+                y_upper_bound = self.limit + input_epsilon
+                y_lower_bound = self.limit - input_epsilon
+                graphs_extend.append(splot(y_lower_bound, show=False, line_color="red"))
+                graphs_extend.append(splot(y_upper_bound, show=False, line_color="red"))
+                y_dim = (y, self.limit - input_epsilon * 3, self.limit + input_epsilon * 3)
+
+            # is it M?
+            else:
+                if self.limit == sm.oo:
+                    y_lower_bound = input_epsilon
+                    graphs_extend.append(splot(y_lower_bound, show=False, line_color="red"))
+                    y_dim = (
+                        y, y_lower_bound - y_lower_bound * 0.5, y_lower_bound + y_lower_bound * 0.5)
+                else:
+                    y_upper_bound = input_epsilon
+                    graphs_extend.append(splot(y_upper_bound, show=False, line_color="red"))
+                    y_dim = (
+                        y, y_upper_bound - y_upper_bound * 0.5, y_upper_bound + y_upper_bound * 0.5)
+
+            # create graphs for the x axis
+            graphs_extend.append(plot_implicit(sm.Eq(x, x_upper_bound), x_dim, y_dim,
+                                               line_color="blue", show=False))
+            graphs_extend.append(plot_implicit(sm.Eq(x, x_lower_bound), x_dim, y_dim,
+                                               line_color="blue", show=False))
+
+            fx_graph = splot(self.fx, show=False, xlim=(x_dim[1], x_dim[2]),
+                             ylim=(y_dim[1], y_dim[2]), line_color="black")
 
             # merge graphs
-            fx_graph.extend(x_lower_graph)
-            fx_graph.extend(x_upper_graph)
-            fx_graph.extend(y_upper_graph)
-            fx_graph.extend(y_lower_graph)
+            for graph in graphs_extend:
+                fx_graph.extend(graph)
             fx_graph.save(filename)
 
     def __init__(self):
