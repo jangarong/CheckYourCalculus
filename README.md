@@ -6,6 +6,7 @@ Tools for CS/Math courses.
 # Website
 
 ## Live Equation Editor
-Create LaTeX math equations and have them be rendered instantly
+- Create LaTeX math equations and have them be rendered instantly
+- Drag & Drop equation images to be scanned and converted to LaTeX code (in development)
 
 ![](save1.gif)
