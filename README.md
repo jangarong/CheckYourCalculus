@@ -9,4 +9,4 @@ Tools for CS/Math courses.
 - Create LaTeX math equations and have them be rendered instantly
 - Drag & Drop equation images to be scanned and converted to LaTeX code (in development)
 
-![](save1.gif)
+![](save3.gif)
