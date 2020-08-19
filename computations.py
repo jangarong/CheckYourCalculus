@@ -8,6 +8,7 @@ class Computation:
     Computation: Stores equations used to compute an answer.
     ------------------------------------------------------------------
     """
+
     def print_all(self):
         """
         ------------------------------------------------------------------
@@ -25,21 +26,27 @@ class Computation:
         what was previously stated.
         ------------------------------------------------------------------
         Parameters:
-            latex_expression: This is the starting equation, with "= " in
-            front of it.
+            latex_expression: This is the equation we want to input.
         Returns:
             True if equations equal each other. False otherwise.
         ------------------------------------------------------------------
         """
-        expr = parse_latex(latex_expression.split("= ", 1)[1])
-        if (sm.simplify(expr) - self.current_equation) == 0:
-            self.current_equation = expr
-            self.equations.append(latex_expression)
-            return True
+        if self.current_equation is not None:
+            expr = parse_latex(latex_expression)
+            if (sm.simplify(expr) - self.current_equation) == 0:
+                self.current_equation = expr
+                self.equations.append(latex_expression)
+                return True
+            else:
+                return False
         else:
-            return False
+            return False  # nothing to compare it to
 
-    def __init__(self, latex_expression: str) -> None:
+    def new(self, latex_expression: str):
+        self.equations.append(latex_expression)
+        self.current_equation = parse_latex(latex_expression)
+
+    def __init__(self):
         """
         ------------------------------------------------------------------
         __init__: initializes computation module.
@@ -49,5 +56,4 @@ class Computation:
         ------------------------------------------------------------------
         """
         self.equations = []  # this stores raw input latex strings
-        self.equations.append(latex_expression)
-        self.current_equation = parse_latex(latex_expression)
+        self.current_equation = None
