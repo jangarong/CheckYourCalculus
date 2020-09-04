@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from computations import Computation
+from Computations.compute import Computation
 
 
 def create_app():

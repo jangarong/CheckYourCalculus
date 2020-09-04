@@ -2,7 +2,7 @@ import sympy as sm
 from sympy.parsing.latex import parse_latex
 
 
-class Computation:
+class Compute:
     """
     ------------------------------------------------------------------
     Computation: Stores equations used to compute an answer.
