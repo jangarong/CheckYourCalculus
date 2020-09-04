@@ -1,17 +1,32 @@
 class Grammar:
+
     """
     ------------------------------------------------------------------
     CFG.Grammar: Grammar
     ------------------------------------------------------------------
     """
 
+    def clear_depth_stack(self):
+        # get rid of the depth's stack
+        while len(self.index_stack) > 0 and self.index_stack[len(self.index_stack) - 1][0] != "|":
+            self.index_stack.pop(len(self.index_stack) - 1)
+
+        # if its not empty, get rid of the depth divider
+        if len(self.index_stack) > 0:
+            self.index_stack.pop(len(self.index_stack) - 1)
+
     def is_accepting_recursive(self, input_string, curr_production):
-        print('\"'+input_string+'\"')
+        print("INPUT: " + '"'+input_string+'"')
         self.index_stack.append(['|', None, None])  # to keep track of depth
         for terminal in self.cfg_dict[curr_production]:
             if terminal == input_string:
+                print('ACCEPTED ' + '"' +
+                      input_string + '"')
+                self.clear_depth_stack()
+                print(self.index_stack)
                 return True
             else:
+                print("TESTING TERMINAL: " + '"'+terminal+'"')
 
                 # iterate through the terminal
                 string_i = 0
@@ -28,7 +43,7 @@ class Grammar:
                         # add to stack only if we've never seen this before
                         if (self.index_stack[len(self.index_stack) - 1][1] is None or
                                 self.index_stack[len(self.index_stack) - 1][1] != string_i):
-                            self.index_stack.append([0, string_i, terminal_i])
+                            self.index_stack.append([1, string_i, terminal_i])
 
                         # take the rest of the substring and reduce it until we get correct indices
                         inner_res = False
@@ -41,7 +56,8 @@ class Grammar:
                             # check if this substring is valid
                             inner_res = (self.is_accepting_recursive(
                                 input_string
-                                [string_i:self.index_stack[len(self.index_stack) - 1][0]],
+                                [string_i:len(input_string) +
+                                          self.index_stack[len(self.index_stack) - 1][0]],
                                 terminal[terminal_i]))
 
                             # remove depth stack
@@ -56,7 +72,7 @@ class Grammar:
 
                             # check if this depth's stack is empty.
                             if self.index_stack[len(self.index_stack) - 1][0] == '|':
-                                print('NO MATCH => BREAK')
+                                print('NO MATCH =>')
                                 valid = False
                                 break
 
@@ -68,17 +84,17 @@ class Grammar:
 
                         # move to next character
                         else:
-                            print('ACCEPTED')
+                            print('PASS')
                             string_i = (self.index_stack[len(self.index_stack) - 1][0] +
                                         len(input_string))
                             terminal_i += 1
 
                     # if they don't match up
-                    elif terminal[terminal_i] != input_string[string_i]:
+                    elif len(input_string) <= string_i or terminal[terminal_i] != input_string[string_i]:
 
                         # check if this depth's stack is empty.
                         if self.index_stack[len(self.index_stack) - 1][0] == '|':
-                            print('MISMATCH => BREAK')
+                            print('MISMATCH =>')
                             valid = False
                             break
 
@@ -95,13 +111,15 @@ class Grammar:
                 # ends are met, and all is valid
                 if (valid and terminal != '' and terminal_i == len(terminal)
                         and string_i == len(input_string)):
-                    print(string_i, terminal_i, terminal, self.index_stack, '"' +
-                          input_string[string_i:] + '"', '"' + terminal[terminal_i:] + '"')
+                    print('ACCEPTED ' + '"' + input_string + '"')
+                    self.clear_depth_stack()
                     return True
-                # else:
-                #     if self.index_stack[len(self.index_stack) - 1][0] != '|':
-                #         self.index_stack.pop(len(self.index_stack) - 1)
 
+                else:
+                    print("BREAK =>")
+
+        print("REJECTED " + '"' + input_string + '"')
+        self.clear_depth_stack()
         return False
 
     def is_accepting(self, input_string):
