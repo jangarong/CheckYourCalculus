@@ -16,17 +16,16 @@ class Grammar:
             self.index_stack.pop(len(self.index_stack) - 1)
 
     def is_accepting_recursive(self, input_string, curr_production):
-        print("INPUT: " + '"'+input_string+'"')
+        # print("INPUT: " + '"'+input_string+'"')
         self.index_stack.append(['|', None, None])  # to keep track of depth
         for terminal in self.cfg_dict[curr_production]:
             if terminal == input_string:
-                print('ACCEPTED ' + '"' +
-                      input_string + '"')
+                # print('ACCEPTED ' + '"' + input_string + '"')
                 self.clear_depth_stack()
-                print(self.index_stack)
+                # print(self.index_stack)
                 return True
             else:
-                print("TESTING TERMINAL: " + '"'+terminal+'"')
+                # print("TESTING TERMINAL: " + '"'+terminal+'"')
 
                 # iterate through the terminal
                 string_i = 0
@@ -34,8 +33,8 @@ class Grammar:
                 valid = True
                 while terminal_i < len(terminal):
 
-                    print(string_i, terminal_i, terminal, self.index_stack, '"'+
-                          input_string[string_i:]+'"', '"'+terminal[terminal_i:]+'"')
+                    # print(string_i, terminal_i, terminal, self.index_stack, '"'+
+                    #       input_string[string_i:]+'"', '"'+terminal[terminal_i:]+'"')
 
                     # if it's a symbol
                     if terminal[terminal_i] in self.cfg_dict.keys():
@@ -60,9 +59,6 @@ class Grammar:
                                           self.index_stack[len(self.index_stack) - 1][0]],
                                 terminal[terminal_i]))
 
-                            # remove depth stack
-                            self.index_stack.pop(len(self.index_stack) - 1)
-
                         # none of the combinations work at this stage
                         if (string_i + self.index_stack[len(self.index_stack) - 1][0] >
                                 len(input_string)):
@@ -72,19 +68,19 @@ class Grammar:
 
                             # check if this depth's stack is empty.
                             if self.index_stack[len(self.index_stack) - 1][0] == '|':
-                                print('NO MATCH =>')
+                                # print('NO MATCH =>')
                                 valid = False
                                 break
 
                             # go back to the last point
                             else:
-                                print('NO MATCH => BACKTRACK')
+                                # print('NO MATCH => BACKTRACK')
                                 string_i = self.index_stack[len(self.index_stack) - 1][1]
                                 terminal_i = self.index_stack[len(self.index_stack) - 1][2]
 
                         # move to next character
                         else:
-                            print('PASS')
+                            # print('PASS')
                             string_i = (self.index_stack[len(self.index_stack) - 1][0] +
                                         len(input_string))
                             terminal_i += 1
@@ -94,13 +90,13 @@ class Grammar:
 
                         # check if this depth's stack is empty.
                         if self.index_stack[len(self.index_stack) - 1][0] == '|':
-                            print('MISMATCH =>')
+                            # print('MISMATCH =>')
                             valid = False
                             break
 
                         # go back to the last point
                         else:
-                            print('MISMATCH => BACKTRACK')
+                            # print('MISMATCH => BACKTRACK')
                             string_i = self.index_stack[len(self.index_stack) - 1][1]
                             terminal_i = self.index_stack[len(self.index_stack) - 1][2]
 
@@ -111,14 +107,14 @@ class Grammar:
                 # ends are met, and all is valid
                 if (valid and terminal != '' and terminal_i == len(terminal)
                         and string_i == len(input_string)):
-                    print('ACCEPTED ' + '"' + input_string + '"')
+                    # print('ACCEPTED ' + '"' + input_string + '"')
                     self.clear_depth_stack()
                     return True
 
-                else:
-                    print("BREAK =>")
+                # else:
+                #     print("BREAK =>")
 
-        print("REJECTED " + '"' + input_string + '"')
+        # print("REJECTED " + '"' + input_string + '"')
         self.clear_depth_stack()
         return False
 
