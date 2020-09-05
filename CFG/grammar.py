@@ -8,32 +8,33 @@ class Grammar:
     def print_status(self, message_type, input_string=None, terminal=None, string_i=None,
                      terminal_i=None):
 
-        # count how many stacks we're one
-        k = 0
-        for stack in self.index_stack:
-            if stack == ['|', None, None]:
-                k += 1
+        if self.debug:
+            # count how many stacks we're one
+            k = 0
+            for stack in self.index_stack:
+                if stack == ['|', None, None]:
+                    k += 1
 
-        # debug input
-        if message_type == "INPUT":
-            print("\n" + ("\t" * k) + 'INPUT: "' + input_string + '"\n')
+            # debug input
+            if message_type == "INPUT":
+                print("\n" + ("\t" * k) + 'INPUT: "' + input_string + '"\n')
 
-        # debug passive
-        elif message_type == "PASS":
-            print("\t" * k + '"' + input_string + '" "' + terminal + '" ' + str(string_i) + " " +
-                  str(terminal_i) + " " + str(self.index_stack))
+            # debug passive
+            elif message_type == "PASS":
+                print("\t" * k + '"' + input_string + '" "' + terminal + '" ' + str(string_i) + " " +
+                      str(terminal_i) + " " + str(self.index_stack))
 
-        # accepted or rejected
-        elif message_type == "ACCEPTED" or message_type == "REJECTED":
-            print(("\t" * k) + ' ' + message_type + ' \n')
+            # accepted or rejected
+            elif message_type == "ACCEPTED" or message_type == "REJECTED":
+                print(("\t" * k) + message_type + ': "' + input_string + '"' + '\n')
 
-        # new terminal
-        elif message_type == "TEST":
-            print("\n" + ("\t" * k) + 'TESTING: "' + terminal + '"')
+            # new terminal
+            elif message_type == "TEST":
+                print("\n" + ("\t" * k) + 'TESTING: "' + terminal + '"')
 
-        # debug status
-        else:
-            print(("\t" * k) + message_type)
+            # debug status
+            else:
+                print(("\t" * k) + message_type)
 
     def clear_depth_stack(self):
         # get rid of the depth's stack
@@ -52,10 +53,10 @@ class Grammar:
 
         for terminal in self.cfg_dict[curr_production]:
 
-            # matches exactly?
+            # matches exactly (you could possibly merge this case with the main loop below)
             if terminal == input_string:
-
-                self.print_status("ACCEPTED")
+                self.print_status("TEST", terminal=terminal)
+                self.print_status("ACCEPTED", input_string=input_string)
 
                 self.clear_depth_stack()
                 return True
@@ -91,12 +92,12 @@ class Grammar:
                             # check if this substring is valid
                             inner_res = (self.is_accepting_recursive(
                                 input_string
-                                [string_i:len(input_string) +
-                                          self.index_stack[len(self.index_stack) - 1][0]],
+                                [string_i:len(input_string) + self.index_stack[
+                                    len(self.index_stack) - 1][0]],
                                 terminal[terminal_i]))
 
-                        # none of the combinations work at this stage
-                        if (string_i + self.index_stack[len(self.index_stack) - 1][0] >
+                        # none of the combinations work at this stage (from substring to empty)
+                        if (string_i + abs(self.index_stack[len(self.index_stack) - 1][0]) >=
                                 len(input_string)):
 
                             # pop this stack
@@ -104,7 +105,7 @@ class Grammar:
 
                             # check if this depth's stack is empty.
                             if self.index_stack[len(self.index_stack) - 1][0] == '|':
-                                # print('NO MATCH =>')
+                                self.print_status("NO MATCH")
                                 valid = False
                                 break
 
@@ -121,7 +122,8 @@ class Grammar:
                             terminal_i += 1
 
                     # if they don't match up
-                    elif len(input_string) <= string_i or terminal[terminal_i] != input_string[string_i]:
+                    elif (len(input_string) <= string_i or
+                          terminal[terminal_i] != input_string[string_i]):
 
                         # check if this depth's stack is empty.
                         if self.index_stack[len(self.index_stack) - 1][0] == '|':
@@ -142,14 +144,14 @@ class Grammar:
                 # ends are met, and all is valid
                 if (valid and terminal != '' and terminal_i == len(terminal)
                         and string_i == len(input_string)):
-                    self.print_status("ACCEPTED")
+                    self.print_status("ACCEPTED", input_string=input_string)
                     self.clear_depth_stack()
                     return True
 
                 else:
                     self.print_status("ERROR")
 
-        self.print_status("REJECTED")
+        self.print_status("REJECTED", input_string=input_string)
         self.clear_depth_stack()
         return False
 
@@ -165,7 +167,7 @@ class Grammar:
         self.index_stack = []
         return res
 
-    def __init__(self, cfg_dict):
+    def __init__(self, cfg_dict, debug=False):
         """
         ------------------------------------------------------------------
         __init__: Initializes CFG via Python dictionary.
@@ -177,5 +179,6 @@ class Grammar:
         """
         self.cfg_dict = cfg_dict
         self.index_stack = []
+        self.debug = debug
 
 
