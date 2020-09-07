@@ -16,8 +16,8 @@ class Grammar:
                 return True
         return False
 
-    def initialize(self, str):
-        # return list of str where sub str is replaced by a variable
+    def initialize(self, s):
+        # return list of s where sub s is replaced by a variable
         # example: 101 -> [S01, 1S1, 10S] if S->0,1,1S1,0S0
         result_list = []
 
@@ -28,28 +28,28 @@ class Grammar:
                     if value.find(sub_key) == -1:
                         # a string without variable
                         if value == '':
-                            # empty str, insert the variable everywhere
-                            for i in range(len(str) + 1):
-                                result = str[0: i] + key + str[i:]
+                            # empty string, insert the variable everywhere
+                            for i in range(len(s) + 1):
+                                result = s[0: i] + key + s[i:]
                                 result_list.append(result)
                         else:
-                            # non-empty value, find value in str, replace by key
-                            for i in range(len(str)):
-                                if str.startswith(value, i):
-                                    result = self.replace(str, i, value, key)
+                            # non-empty value, find value in s, replace by key
+                            for i in range(len(s)):
+                                if s.startswith(value, i):
+                                    result = self.replace(s, i, value, key)
                                     result_list.append(result)
         return result_list
 
-    def replace(self, str, i, substr, target):
-        # replace substr by target (in the i th position at str)
+    def replace(self, s, i, substr, target):
+        # replace substr by target (in the i th position at s)
         # example: replace('012345', 2, '234', 'A') -> '01A5'
-        if (str[i: i + len(substr)] != substr):
+        if s[i: i + len(substr)] != substr:
             # debug message
             print("Substr not start at i th position")
-            print("slice = ", str[i: i + len(substr)], "  sub str = ", substr)
-            return;
+            print("slice = ", s[i: i + len(substr)], "  sub str = ", substr)
+            return
 
-        return str[:i] + target + str[i + len(substr):]
+        return s[:i] + target + s[i + len(substr):]
 
     def get_max_depth(self):
         # max of a variable appears in value
@@ -64,37 +64,36 @@ class Grammar:
                     max_count = count
         return max_count
 
-    def get_num_var(self, str):
+    def get_num_var(self, s):
         count = 0
         keys = self.cfg_dict.keys()
         for sub_key in keys:
-            count += str.count(sub_key)
-
+            count += s.count(sub_key)
         return count
 
-    def production(self, str):
-        # if str is not start variable and can't be replaced anymore, return false
-        # rerun initialize if there are more than one sub str to be replaced by variable
-        # count the number of variables in str, run only if < max_depth
+    def production(self, s):
+        # if s is not start variable and can't be replaced anymore, return false
+        # rerun initialize if there are more than one sub s to be replaced by variable
+        # count the number of variables in s, run only if < max_depth
 
-        if self.get_num_var(str) > self.max_depth:
+        if self.get_num_var(s) > self.max_depth:
             return False
 
-        # base case: if str is start variable, return true
-        if str == self.start:
+        # base case: if s is start variable, return true
+        if s == self.start:
             return True
 
         keys = self.cfg_dict.keys()
         for key in keys:
             for value in self.cfg_dict[key]:  # traverse every value in dict
-                for i in range(len(str)):
-                    if str.startswith(value, i) and value != '':
-                        replaced_str = self.replace(str, i, value, key)
+                for i in range(len(s)):
+                    if s.startswith(value, i) and value != '':
+                        replaced_str = self.replace(s, i, value, key)
                         replaced_result = self.production(replaced_str)
                         if replaced_result:
                             return True
 
-        re_init_list = self.initialize(str)
+        re_init_list = self.initialize(s)
         for re_init in re_init_list:
             return self.production(re_init)
 

@@ -1,25 +1,29 @@
+from typing import List, Tuple, Dict
+
+
 class PushDown:
-    def __init__(self, pda_dict, initial, accept):
+    def __init__(self, pda_dict: Dict[Tuple[str, str, str], List[Tuple[str, str]]],
+                 initial: str, accept: List[str]):
         self.pda_dict = pda_dict  # (state1, symbol, stack1): [(state2, stack2)]
         self.initial = initial
         self.accept = accept
 
-    def is_accepting(self, input_string):
+    def is_accepting(self, input_string: str):
         tups = self.transit(self.initial, input_string, [])
         print('all possible outcome = ', tups)
         # all possible outcome in list of tups: [(state, stack), (...)]
 
         for tup in tups:
             if (tup[0] in self.accept) and (tup[1] == []):
-                # end in accpeting state and empty stack
+                # end in accepting state and empty stack
                 return True
         return False
 
-    def transit(self, state, str, stack):
+    def transit(self, state: str, s: str, stack: List[str]):
         list_of_tups = []  # in the form [(state, stack)]
 
-        # base case: str is empty
-        if len(str) == 0:
+        # base case: s is empty
+        if len(s) == 0:
             list_of_tups.append((state, stack))
             for key in self.pda_dict.keys():
                 if (key[0] == state) and (key[1] == ''):
@@ -30,8 +34,8 @@ class PushDown:
                             list_of_tups.append((value[0], []))
 
         else:
-            y = str[:len(str) - 1]  # string before last symbol
-            a = str[-1]  # last symbol
+            y = s[:len(s) - 1]  # string before last symbol
+            a = s[-1]  # last symbol
             y_list = self.transit(state, y, stack)
 
             for y_tup in y_list:
@@ -44,7 +48,8 @@ class PushDown:
 
         return list_of_tups
 
-    def update_state_stack(self, tup, char, list_of_tups):
+    def update_state_stack(self, tup: Tuple[str, List[str]],
+                           char: str, list_of_tups: List[Tuple[str, List[str]]]):
         for key in self.pda_dict.keys():
             if (key[0] == tup[0]) and (key[1] == char):
                 for value in self.pda_dict[key]:
