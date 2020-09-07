@@ -7,6 +7,8 @@ class LESymbol:
             print("Symbols that take more than 2 variables have not"
                   "been implemented yet for Truth Tables.")
 
+        # note to self: should display an error if the char is ' ', '(' or ')'
+
 
 def to_binary(n: int, num_digits: int):
 
