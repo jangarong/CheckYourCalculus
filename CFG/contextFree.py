@@ -73,8 +73,8 @@ class Grammar:
 
     def production(self, s):
         # if s is not start variable and can't be replaced anymore, return false
-        # rerun initialize if there are more than one sub s to be replaced by variable
-        # count the number of variables in s, run only if < max_depth
+        # rerun initialize if there are more than one sub str to be replaced by variable
+        # count the number of variables in str, run only if < max_depth
 
         if self.get_num_var(s) > self.max_depth:
             return False
