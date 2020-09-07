@@ -2,11 +2,40 @@ class Grammar:
 
     """
     ------------------------------------------------------------------
-    CFG.Grammar: Grammar
+    CFG.Grammar: Context-Free Grammar object.
     ------------------------------------------------------------------
     """
+    def limit_recursion(self):
+        """
+        ------------------------------------------------------------------
+        limit_recursion: Limits the recursive loop.
+        ------------------------------------------------------------------
+        """
+        if self.debug and self.limit != 0:
+            if self.limit > self.counter:
+                self.counter += 1
+                return True
+            else:
+                self.print_status("LIMIT REACHED")
+                return False
+        else:
+            return True
+
     def print_status(self, message_type, input_string=None, terminal=None, string_i=None,
                      terminal_i=None):
+        """
+        ------------------------------------------------------------------
+        print_status: For debug purposes, it will print the given message
+        tabbed based on the # of depth stacks.
+        ------------------------------------------------------------------
+        Parameters:
+            message_type: Message in string.
+            input_string: The string being processed.
+            terminal: The terminal that is processing the string.
+            string_i: Index that we're viewing the string at.
+            terminal_i: Index that we're viewing the terminal at.
+        ------------------------------------------------------------------
+        """
 
         if self.debug:
             # count how many stacks we're one
@@ -37,6 +66,12 @@ class Grammar:
                 print(("\t" * k) + message_type)
 
     def clear_depth_stack(self):
+        """
+        ------------------------------------------------------------------
+        clear_depth_stack: Clears the topmost stacks associated with the
+        current depth.
+        ------------------------------------------------------------------
+        """
         # get rid of the depth's stack
         while len(self.index_stack) > 0 and self.index_stack[len(self.index_stack) - 1][0] != "|":
             self.index_stack.pop(len(self.index_stack) - 1)
@@ -46,6 +81,18 @@ class Grammar:
             self.index_stack.pop(len(self.index_stack) - 1)
 
     def is_accepting_recursive(self, input_string, curr_production):
+        """
+        ------------------------------------------------------------------
+        is_accepting_recursive: Returns True if the CFG's Production
+        accepts that string.
+        ------------------------------------------------------------------
+        Parameters:
+            input_string: String to accept/reject.
+            curr_production: The production that is processing the string.
+        Returns:
+            True if string is accepted, False otherwise.
+        ------------------------------------------------------------------
+        """
 
         self.print_status("INPUT", input_string=input_string)
 
@@ -68,7 +115,7 @@ class Grammar:
                 string_i = 0
                 terminal_i = 0
                 valid = True
-                while terminal_i < len(terminal):
+                while terminal_i < len(terminal) and self.limit_recursion():
 
                     self.print_status("PASS", input_string=input_string, terminal=terminal,
                                       string_i=string_i, terminal_i=terminal_i)
@@ -83,8 +130,8 @@ class Grammar:
 
                         # take the rest of the substring and reduce it until we get correct indices
                         inner_res = False
-                        while (string_i + self.index_stack[len(self.index_stack) - 1][0] <=
-                               len(input_string) and not inner_res):
+                        while (string_i + abs(self.index_stack[len(self.index_stack) - 1][0]) <=
+                               len(input_string) + 1 and not inner_res):
 
                             # reduce substring
                             self.index_stack[len(self.index_stack) - 1][0] -= 1
@@ -97,7 +144,7 @@ class Grammar:
                                 terminal[terminal_i]))
 
                         # none of the combinations work at this stage (from substring to empty)
-                        if (string_i + abs(self.index_stack[len(self.index_stack) - 1][0]) >=
+                        if (string_i + abs(self.index_stack[len(self.index_stack) - 1][0]) >
                                 len(input_string)):
 
                             # pop this stack
@@ -156,6 +203,16 @@ class Grammar:
         return False
 
     def is_accepting(self, input_string):
+        """
+        ------------------------------------------------------------------
+        is_accepting: Returns True if the CFG accepts input_string.
+        ------------------------------------------------------------------
+        Parameters:
+            input_string: String to accept/reject.
+        Returns:
+            True if string is accepted, False otherwise.
+        ------------------------------------------------------------------
+        """
 
         # check if the string does not contain CFG symbols
         for key in self.cfg_dict.keys():
@@ -167,7 +224,7 @@ class Grammar:
         self.index_stack = []
         return res
 
-    def __init__(self, cfg_dict, debug=False):
+    def __init__(self, cfg_dict, debug=False, limit=0):
         """
         ------------------------------------------------------------------
         __init__: Initializes CFG via Python dictionary.
@@ -177,8 +234,17 @@ class Grammar:
                 Example: {'S': ['', '1', '0', '1S1', '0S0']}
         ------------------------------------------------------------------
         """
+
+        # cfg itself
         self.cfg_dict = cfg_dict
+
+        # for recursion
         self.index_stack = []
+
+        # for debugging purposes
         self.debug = debug
+        self.limit = limit
+        self.counter = 0
+
 
 

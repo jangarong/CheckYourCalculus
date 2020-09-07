@@ -108,6 +108,16 @@ class Variables:
                               str(self.delta_bound) + ")")
         self.delta_exp = expr.subs(self.sub_format_list)
 
+    # def undo_delta(self):
+    #     """
+    #     ------------------------------------------------------------------
+    #     undo_delta: Resets delta to 0.
+    #     ------------------------------------------------------------------
+    #     Parameters:
+    #         expr: The expression that delta is now going to be equal to.
+    #     ------------------------------------------------------------------
+    #     """
+
     def __init__(self, fx, x0, direction="+-"):
         """
         ------------------------------------------------------------------
