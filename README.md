@@ -33,7 +33,11 @@ Tools for CS/Math courses.
 * Check if your string is accepted by the given PDA and list all states and stacks that can be reached. 
 
 ## Logical Equivalencies
-* More information coming soon.
+* Given a predicate, you can
+  * Convert to CNF
+  * Convert to DNF
+  * Generate a Truth Table
+  * Create a Parse Tree
 
 ## Computations
 * Checks if one expression is equivalent to the other.
