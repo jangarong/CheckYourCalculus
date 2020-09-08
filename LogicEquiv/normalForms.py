@@ -7,6 +7,16 @@ class NormalForms:
     """
 
     def dnf(self, predicate: str):
+        """
+        ------------------------------------------------------------------
+        dnf: Gets the dnf of the given predicate.
+        ------------------------------------------------------------------
+        Parameters:
+            predicate: Predicate that we want to turn into a DNF.
+        Returns:
+            Disjunctive Normal Form of the predicate.
+        ------------------------------------------------------------------
+        """
         truth_table = self.generate_truth_table(predicate)
         var_lst = self.get_vars(predicate)
         res = '('
@@ -17,7 +27,7 @@ class NormalForms:
                 sub_res = '('
                 for i in range(len(key)):
                     if key[i] == '0':
-                        sub_res += '(\\neg' + var_lst[i] + ')'
+                        sub_res += '(\\neg ' + var_lst[i] + ')'
                     else:
                         sub_res += var_lst[i]
                     sub_res += ' \\wedge '
@@ -37,9 +47,19 @@ class NormalForms:
         if len(res) > 0:
             return res[:-len(' \\vee ')] + ')'
         else:
-            return ''  # None exist?
+            return ''  # None? Or use a contradiction...
 
     def cnf(self, predicate: str):
+        """
+        ------------------------------------------------------------------
+        cnf: Gets the cnf of the given predicate.
+        ------------------------------------------------------------------
+        Parameters:
+            predicate: Predicate that we want to turn into a CNF.
+        Returns:
+            Conjunctive Normal Form of the predicate.
+        ------------------------------------------------------------------
+        """
         neg_pre = '(\\neg ' + predicate + ')'
         neg_pre_dnf = self.dnf(neg_pre)
         var_lst = self.get_vars(predicate)
@@ -64,5 +84,9 @@ class NormalForms:
         # apply double negation law
         for var in var_lst:
             result = result.replace('(\\neg(\\neg ' + var + '))', var)
+
+        # if result is just a bracket (usually when it gets simplified to nothing).
+        if result == ')':
+            return ''  # None? Or use a contradiction or some other method?
 
         return result

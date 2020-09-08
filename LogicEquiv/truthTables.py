@@ -90,6 +90,22 @@ class TruthTables(NormalForms):
     ------------------------------------------------------------------
     """
 
+    def check_equiv(self, p1: str, p2: str):
+        """
+        ------------------------------------------------------------------
+        check_equiv: Checks if p1 and p2 are logically equivalent via
+        Truth Tables
+        ------------------------------------------------------------------
+        Parameters:
+            p1: Predicate to compare with p2.
+            p2: Predicate to compare with p1.
+        Returns:
+            True if both statements are logically equivalent. False
+            otherwise.
+        ------------------------------------------------------------------
+        """
+        return self.generate_truth_table(p1) == self.generate_truth_table(p2)
+
     def get_vars(self, predicate: str):
         """
         ------------------------------------------------------------------
@@ -199,6 +215,8 @@ class TruthTables(NormalForms):
         # evaluate using post-order
         return self.post_order_evaluation(root, var_dict, unary_symbols, binary_symbols)
 
+    # def clean_predicate(self, predicate: str):
+
     def generate_truth_table(self, predicate: str):
         """
         ------------------------------------------------------------------
@@ -213,7 +231,7 @@ class TruthTables(NormalForms):
         var_lst = self.get_vars(predicate)
         n = 2 ** len(var_lst)
         # TODO: Add brackets based on order of operations (and maybe remove excessive spacing?)
-        # predicate = cleanpredicate(predicate)
+        # predicate = clean_predicate(predicate)
         root = generate_parse_tree(predicate, var_lst)
         truth_table = {}
         for i in range(0, n):
