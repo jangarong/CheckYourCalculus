@@ -1,5 +1,3 @@
-
-
 class NormalForms:
     """
     ------------------------------------------------------------------
@@ -32,7 +30,39 @@ class NormalForms:
                 # disjunct everything else
                 res += sub_res + ' \\vee '
 
+        # if there's only one term, remove redundant brackets
+        if res.count('\\wedge') == 1:
+            res = res[1:-1]
+
         if len(res) > 0:
             return res[:-len(' \\vee ')] + ')'
         else:
-            return ''   # None exist?
+            return ''  # None exist?
+
+    def cnf(self, predicate: str):
+        neg_pre = '(\\neg ' + predicate + ')'
+        neg_pre_dnf = self.dnf(neg_pre)
+        var_lst = self.get_vars(predicate)
+        result = ''
+
+        # apply De Morgan's Law
+        i = 0
+        while i < len(neg_pre_dnf):
+            if neg_pre_dnf.startswith('\\wedge', i):
+                result += '\\vee'
+                i += len('\\wedge')
+            elif neg_pre_dnf.startswith('\\vee', i):
+                result += '\\wedge'
+                i += len('\\vee')
+            elif neg_pre_dnf[i] in var_lst:
+                result += '(\\neg ' + neg_pre_dnf[i] + ')'
+                i += 1
+            else:
+                result += neg_pre_dnf[i]
+                i += 1
+
+        # apply double negation law
+        for var in var_lst:
+            result = result.replace('(\\neg(\\neg ' + var + '))', var)
+
+        return result
