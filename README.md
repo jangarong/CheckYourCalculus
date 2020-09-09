@@ -10,7 +10,7 @@ Tools for CS/Math courses.
 - The TeX code can be easily edited; the equations will dynamically render on the page
 - Use the buttons below to automatically open Symbolab/Wolfram in a new tab, passing in your equation as an input
 
-![](save3.gif)
+![](/imgs/save3.gif)
 
 #### API Usage
 - The Live Equation Editor uses the MathPix API to perform OCR on equation images
@@ -19,7 +19,7 @@ Tools for CS/Math courses.
 # Backend Features
 
 ## Delta Epsilon Proofs
-![](/samples/open10.png)
+![](/imgs/open10.png)
 * Structure your own Delta Epsilon proof in LaTeX
 * Allows you to set delta and add expressions to your proof (it'll only add them if the current expression and its previous one makes sense).
 * Set epsilon to create a visualization of the proof.
