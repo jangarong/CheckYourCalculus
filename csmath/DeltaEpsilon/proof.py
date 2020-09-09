@@ -1,6 +1,6 @@
 import sympy as sm
-from DeltaEpsilon.variables import Variables
-from DeltaEpsilon.graphs import Graphs
+from csmath.DeltaEpsilon.variables import Variables
+from csmath.DeltaEpsilon.graphs import Graphs
 
 
 class Proof(Variables, Graphs):

@@ -1,4 +1,4 @@
-from Automata.DFSA import Deterministic
+from csmath.Automata.DFSA import Deterministic
 import unittest
 
 

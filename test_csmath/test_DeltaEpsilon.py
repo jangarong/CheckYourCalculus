@@ -1,7 +1,7 @@
-from DeltaEpsilon.proof import Proof
-from DeltaEpsilon.parsing import latex_to_limit
-from DeltaEpsilon.parsing import insert_expr_latex
-from DeltaEpsilon.parsing import insert_bound_eq_latex
+from csmath.DeltaEpsilon.proof import Proof
+from csmath.DeltaEpsilon.parsing import latex_to_limit
+from csmath.DeltaEpsilon.parsing import insert_expr_latex
+from csmath.DeltaEpsilon.parsing import insert_bound_eq_latex
 from sympy.parsing.latex import parse_latex
 
 # test case 2 - delta with a multiple

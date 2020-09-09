@@ -1,4 +1,4 @@
-from LogicEquiv.truthTables import TruthTables
+from csmath.LogicEquiv.truthTables import TruthTables
 tt = TruthTables()
 print(tt.dnf('((\\neg x) \\vee x)'))
 print(tt.cnf('((\\neg x) \\vee x)'))
@@ -13,4 +13,3 @@ print(tt.generate_truth_table('((\\neg x) \\leftrightarrow y)'))
 print(tt.generate_truth_table(tt.dnf('((\\neg x) \\leftrightarrow y)')))
 # print(tt.generate_truth_table(tt.cnf('((\\neg x) \\leftrightarrow y)')))
 # the above commented code causes an error when parsing
-

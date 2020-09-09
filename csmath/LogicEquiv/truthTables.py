@@ -1,5 +1,5 @@
-from LogicEquiv.binaryTree import Node
-from LogicEquiv.normalForms import NormalForms
+from csmath.LogicEquiv.binaryTree import Node
+from csmath.LogicEquiv.normalForms import NormalForms
 
 
 class LESymbol:

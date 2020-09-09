@@ -1,4 +1,4 @@
-from Automata.NFSA import NonDeterministic
+from csmath.Automata.NFSA import NonDeterministic
 import unittest
 
 

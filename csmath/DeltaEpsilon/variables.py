@@ -1,6 +1,6 @@
 import copy
 from sympy.core.relational import Relational
-from DeltaEpsilon.absolute_checkers import *
+from csmath.DeltaEpsilon.absolute_checkers import *
 
 
 class Variables:

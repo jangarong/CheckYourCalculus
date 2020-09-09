@@ -1,6 +1,6 @@
 import sympy as sm
 
-from DeltaEpsilon.absolute_checkers import double_inequality_to_x
+from csmath.DeltaEpsilon.absolute_checkers import double_inequality_to_x
 
 
 class Contradiction:

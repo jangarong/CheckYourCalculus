@@ -1,4 +1,4 @@
-from Automata.PDA import PushDown
+from csmath.Automata.PDA import PushDown
 import unittest
 
 

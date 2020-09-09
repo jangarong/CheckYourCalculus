@@ -1,5 +1,5 @@
 import unittest
-from CFG.contextFree import Grammar
+from csmath.CFG.contextFree import Grammar
 
 
 class TestGrammar(unittest.TestCase):
