@@ -1,21 +1,21 @@
 import React from "react"
-import { Link } from "gatsby"
+import GitHubIcon from '@material-ui/icons/GitHub';
+// import { Link } from "gatsby"
 
 import Layout from "../components/layout"
-import Image from "../components/image"
 import SEO from "../components/seo"
 
 const IndexPage = () => (
   <Layout>
     <SEO title="Home" />
-    <h1>Hi people</h1>
-    <p>Welcome to your new Gatsby site.</p>
-    <p>Now go build something great.</p>
-    <div style={{ maxWidth: `300px`, marginBottom: `1.45rem` }}>
-      <Image />
+    <div align={'center'}>
+      <h1 style={{fontSize: '64px'}}>csmathtools</h1>
+      <p style={{fontSize: '24px'}}>Coming soon...</p>
+      <p style={{fontSize: '18px', marginTop: '50px'}}>For now, why not check out our GitHub page?</p>
+      <a href={'https://github.com/jangarong/csmathtools'}>
+        <GitHubIcon style={{marginTop: '30px', width: '64px', height: '64px'}} />
+      </a>
     </div>
-    <Link to="/page-2/">Go to page 2</Link> <br />
-    <Link to="/using-typescript/">Go to "Using TypeScript"</Link>
   </Layout>
 )
 
