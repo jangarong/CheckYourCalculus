@@ -2,12 +2,12 @@ import React from "react"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 
-const ComputePage = () => (
+const CFGPage = () => (
   <Layout>
-    <SEO title="Compute" />
+    <SEO title="CFGs" />
     <div align={'center'}>
     </div>
   </Layout>
 )
 
-export default ComputePage
+export default CFGPage

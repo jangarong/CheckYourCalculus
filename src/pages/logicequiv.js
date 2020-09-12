@@ -2,12 +2,12 @@ import React from "react"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 
-const ComputePage = () => (
+const LogicEquivPage = () => (
   <Layout>
-    <SEO title="Compute" />
+    <SEO title="Logical Equivalencies" />
     <div align={'center'}>
     </div>
   </Layout>
 )
 
-export default ComputePage
+export default LogicEquivPage
