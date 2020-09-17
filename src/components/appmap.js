@@ -9,11 +9,11 @@ const AppMap = [
     title: 'Context-Free Grammars',
     desc: 'Develop your own Context-Free Grammar.',
   },
-  {
-    link: '/logicequiv/',
-    title: 'Logical Equivalencies',
-    desc: 'Given a predicate, generate Truth Tables, their CNF and DNF.',
-  },
+  // {
+  //   link: '/logicequiv/',
+  //   title: 'Logical Equivalencies',
+  //   desc: 'Given a predicate, generate Truth Tables, their CNF and DNF.',
+  // },
 ]
 
 
