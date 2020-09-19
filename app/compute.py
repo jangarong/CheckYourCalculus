@@ -8,11 +8,11 @@ def compute(app):
             'correct': 'yes'}
     comps = Compute()
 
-    @app.route('/app/compute', methods=['GET'])
+    @app.route('/api/compute', methods=['GET'])
     def get_eqs():
         return jsonify(data)
 
-    @app.route('/app/compute', methods=['POST'])
+    @app.route('/api/compute', methods=['POST'])
     def display_eqs():
         text = request.form['text']
         data['equation'] = text
