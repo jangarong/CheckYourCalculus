@@ -41,3 +41,6 @@ Tools for CS/Math courses.
 
 ## Computations
 * Checks if one expression is equivalent to the other.
+
+### Some Resources Used
+* [gatsby-starter-default](https://github.com/gatsbyjs/gatsby-starter-default)

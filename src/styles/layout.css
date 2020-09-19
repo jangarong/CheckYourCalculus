@@ -1,0 +1,28 @@
+@import url('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Recursive:wght@300&display=swap');
+
+a {
+    color: #949393;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #cacaca;
+    text-decoration: none;
+}
+
+a.body {
+    color: white;
+    text-decoration: underline;
+}
+
+a.body:hover {
+    color: mediumspringgreen;
+    text-decoration: underline;
+}
+
+body {
+    font-family: 'Recursive';
+    color: white;
+    background-color: #2d2a2a;
+}
