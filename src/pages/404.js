@@ -8,7 +8,7 @@ const NotFoundPage = () => (
     <SEO title="404: Not found" />
     <div align={'center'}>
       <h1 style={{fontSize: '64px'}}>csmathtools</h1>
-      <p style={{fontSize: '24px'}}>404: Not found</p>
+      <p style={{fontSize: '20px'}}>404: Not found</p>
     </div>
   </Layout>
 )
