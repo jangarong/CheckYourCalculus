@@ -69,11 +69,21 @@ def generate_parse_tree(predicate: str, var_lst: list):
         if char == '(':
             curr_node.left_node = Node(parent_node=curr_node)
             curr_node = curr_node.left_node
+
+        # should go outside of brackets
         elif char == ')':
             curr_node = curr_node.parent_node
+
+            # if we reach an operator rather than the outer brackets
+            if curr_node is not None and curr_node.parent_node is not None and curr_node.char != '':
+                curr_node = curr_node.parent_node
+
+        # char is a variable (leaf branch)
         elif char in var_lst:
             curr_node.char = char
             curr_node = curr_node.parent_node
+
+        # char is an operator
         else:
             curr_node.char = char
             curr_node.right_node = Node(parent_node=curr_node)
