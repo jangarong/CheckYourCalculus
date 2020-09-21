@@ -1,9 +1,9 @@
 const AppMap = [
-  // {
-  //   link: '/compute/',
-  //   title: 'Computations',
-  //   desc: 'For every computational problem.',
-  // },
+  {
+    link: '/compute/',
+    title: 'Computations',
+    desc: 'For every computational problem.',
+  },
   {
     link: '/cfg/',
     title: 'Context-Free Grammars',

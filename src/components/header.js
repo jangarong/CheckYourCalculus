@@ -9,9 +9,11 @@ const Header = () => (
   <div>
     <AppBar style={{backgroundColor: '#3b3b3b'}} position="static">
       <Toolbar>
-        <IconButton color="inherit" aria-label="menu">
-          <MenuIcon />
-        </IconButton>
+        <a href={'/'}>
+          <IconButton color="inherit" aria-label="menu">
+            <MenuIcon />
+          </IconButton>
+        </a>
       </Toolbar>
     </AppBar>
   </div>
