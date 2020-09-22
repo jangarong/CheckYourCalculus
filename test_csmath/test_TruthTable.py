@@ -7,6 +7,10 @@ class TestPDA(unittest.TestCase):
     def setUp(self):
         self.tt = TruthTables()
 
+    def test_truth_00(self):
+        self.assertDictEqual(self.tt.generate_truth_table(''),
+                             {'': None})
+
     def test_truth_01(self):
         self.assertDictEqual(self.tt.generate_truth_table('\\neg ((\\neg x) \\vee x)'),
                              {'0': '0', '1': '0'})
@@ -26,8 +30,17 @@ class TestPDA(unittest.TestCase):
                                                           "(\\neg y)))"),
                              {'00': '0', '01': '1', '10': '1', '11': '0'})
 
-    # def test_contradiction_dnf(self):
-    #     self.assertEqual(self.tt.dnf('((\\neg x) \\vee x)'), "((\\neg x) \\wedge x)")
+    def test_tautology_dnf(self):
+        self.assertEqual(self.tt.dnf('((\\neg x) \\vee x) \\vee y'), "1")
+
+    def test_contradiction_dnf(self):
+        self.assertEqual(self.tt.dnf('((\\neg x) \\wedge x)'), "0")
+
+    def test_tautology_cnf(self):
+        self.assertEqual(self.tt.cnf('((\\neg x) \\vee x) \\vee y'), "1")
+
+    def test_contradiction_cnf(self):
+        self.assertEqual(self.tt.cnf('((\\neg z) \\wedge z)'), "0")
 
     def test_dnf_01(self):
         self.assertEqual(self.tt.dnf('(((\\neg x) \\vee y) \\rightarrow z)'),

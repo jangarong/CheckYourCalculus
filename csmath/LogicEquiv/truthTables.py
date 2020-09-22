@@ -49,8 +49,8 @@ def to_binary(n: int, num_digits: int):
 def generate_parse_tree(predicate: str, var_lst: list):
     """
     ------------------------------------------------------------------
-    generate_parse_tree: Creates a parse tree of a predicate that
-    contains only unary and binary operators.
+    truthTables.generate_parse_tree: Creates a parse tree of a
+    predicate that contains only unary and binary operators.
     ------------------------------------------------------------------
     Parameters:
         predicate: Must be well formatted, no spaces and all order

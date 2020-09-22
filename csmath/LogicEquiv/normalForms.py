@@ -1,3 +1,34 @@
+def tautology_contradiction(truth_table: dict) -> str:
+    """
+    ------------------------------------------------------------------
+    normalForms.tautology_contradiction: Determines whether the truth
+    table yields a tautology, contradiction, or neither
+    ------------------------------------------------------------------
+    Parameters:
+        truth_table - Dictionary containing the truth table.
+    Returns:
+        '0' if Contradiction
+        '1' if Tautology
+        '2' if Neither
+    ------------------------------------------------------------------
+    """
+    all0 = True
+    all1 = True
+    for key in truth_table:
+        if truth_table[key] == '0':
+            all1 = False
+        else:
+            all0 = False
+        if not all0 and not all1:
+            break
+
+    if all0:
+        return '0'
+    elif all1:
+        return '1'
+    return '2'
+
+
 class NormalForms:
     """
     ------------------------------------------------------------------
@@ -17,7 +48,12 @@ class NormalForms:
             Disjunctive Normal Form of the predicate.
         ------------------------------------------------------------------
         """
+        # check whether tautology or contradiction
         truth_table = self.generate_truth_table(predicate)
+        tc = tautology_contradiction(truth_table)
+        if tc != '2':
+            return tc
+
         var_lst = self.get_vars(predicate)
         res = '('
         for key in truth_table.keys():
@@ -44,7 +80,7 @@ class NormalForms:
         if res.count('\\wedge') == 1:
             res = res[1:-1]
 
-        if len(res) > 0:
+        if len(res[:-len(' \\vee ')]) > 0:
             return res[:-len(' \\vee ')] + ')'
         else:
             return ''  # None? Or use a contradiction...
@@ -60,6 +96,12 @@ class NormalForms:
             Conjunctive Normal Form of the predicate.
         ------------------------------------------------------------------
         """
+        # check whether tautology or contradiction
+        truth_table = self.generate_truth_table(predicate)
+        tc = tautology_contradiction(truth_table)
+        if tc != '2':
+            return tc
+
         neg_pre = '(\\neg ' + predicate + ')'
         neg_pre_dnf = self.dnf(neg_pre)
         var_lst = self.get_vars(predicate)
