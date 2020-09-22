@@ -10,11 +10,11 @@ def cfg(app):
             'accept': False,
             'cfg_map': {}}
 
-    @app.route('/api/cfg/', methods=['GET'])
+    @app.route('/api/cfg', methods=['GET'])
     def get_grammar():
         return jsonify(data)
 
-    @app.route('/api/cfg/', methods=['POST'])
+    @app.route('/api/cfg', methods=['POST'])
     def is_accepting():
 
         # compute whether the string gets accepted or not
