@@ -1,22 +1,6 @@
 from csmath.LogicEquiv.binaryTree import Node
 from csmath.LogicEquiv.normalForms import NormalForms
-
-
-class LESymbol:
-    """
-    ------------------------------------------------------------------
-    truthTables.LESymbol: CDT for symbol operations.
-    ------------------------------------------------------------------
-    """
-
-    def __init__(self, char: str, truth_table: dict):
-        self.truth_table = truth_table
-        self.char = char
-        if len(truth_table.keys()) > 4:
-            print("Symbols that take more than 2 variables have not"
-                  "been implemented yet for Truth Tables.")
-
-        # note to self: should display an error if the char is ' ', '(' or ')'
+from csmath.LogicEquiv.symbols import LESymbol
 
 
 def to_binary(n: int, num_digits: int):
@@ -249,24 +233,42 @@ class TruthTables(NormalForms):
             truth_table[binary_str] = self.evaluate(root, var_lst, binary_str)
         return truth_table
 
-    def new_symbol(self, char: str, truth_table: dict):
+    def symbols_to_dicts(self) -> list:
         """
         ------------------------------------------------------------------
-        new_symbol: Add new symbol to Truth Table object.
+        tt_to_dict: Creates list of dictionaries from TruthTable's
+        symbols.
+        ------------------------------------------------------------------
+        """
+        res = []
+        for symbol in self.symbols:
+            symbol_dict = {'order': symbol.order,
+                           'truth_table': symbol.truth_table,
+                           'char': symbol.char}
+            res.append(symbol_dict)
+        return res
+
+    def dicts_to_symbols(self, symbol_dicts: list):
+        """
+        ------------------------------------------------------------------
+        dict_to_tt: Creates symbol ordering from list of dictionaries.
         ------------------------------------------------------------------
         Parameters:
-            char: Operation symbol.
-            truth_table: Truth table of operation.
+            symbol_dicts: List of dictionaries containing the char, order
+            and truth table of each symbol.
         ------------------------------------------------------------------
         """
-        self.symbols.append(LESymbol(char, truth_table))
+        self.symbols = []
+        for symbol_dict in symbol_dicts:
+            self.symbols.append(LESymbol(symbol_dict['char'], symbol_dict['order'],
+                                         symbol_dict['truth_table']))
 
     def __init__(self):
 
-        # default symbols
-        self.symbols = [LESymbol('\\neg', {'1': '0', '0': '1'}),
-                        LESymbol('\\wedge', {'11': '1', '10': '0', '01': '0', '00': '0'}),
-                        LESymbol('\\vee', {'11': '1', '10': '1', '01': '1', '00': '0'}),
-                        LESymbol('\\rightarrow', {'11': '1', '10': '0', '01': '1', '00': '1'}),
-                        LESymbol('\\leftrightarrow', {'11': '1', '10': '0', '01': '0', '00': '1'})]
-
+        # default symbols (note that this is also the order of evaluation).
+        self.symbols = [LESymbol('\\neg', 0, {'1': '0', '0': '1'}),
+                        LESymbol('\\wedge', 1, {'11': '1', '10': '0', '01': '0', '00': '0'}),
+                        LESymbol('\\vee', 1, {'11': '1', '10': '1', '01': '1', '00': '0'}),
+                        LESymbol('\\rightarrow', 2, {'11': '1', '10': '0', '01': '1', '00': '1'}),
+                        LESymbol('\\leftrightarrow', 3,
+                                 {'11': '1', '10': '0', '01': '0', '00': '1'})]

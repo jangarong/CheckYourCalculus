@@ -1,12 +1,10 @@
 from flask import request, jsonify
 from csmath.CFG.contextFree import Grammar
 
-# note to self: test {var: [var+str+var+str, str]}
-
 
 def cfg(app):
 
-    data = {'string': '',
+    data = {'input_string': '',
             'accept': False,
             'cfg_map': {}}
 
@@ -18,12 +16,12 @@ def cfg(app):
     def is_accepting():
 
         # compute whether the string gets accepted or not
-        text = request.form['string']
+        text = request.form['input_string']
         cfg_map = request.form['cfg_map']
-        cfg = Grammar(cfg_map, 'S')
+        g = Grammar(cfg_map, 'S')
 
         # output to API
-        data['string'] = text
+        data['input_string'] = text
         data['cfg_map'] = cfg_map
-        data['accept'] = cfg.is_accepting(text)
+        data['accept'] = g.is_accepting(text)
         return jsonify(data)
