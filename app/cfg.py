@@ -2,8 +2,6 @@ from flask import request, jsonify
 import json
 from csmath.CFG.contextFree import Grammar
 
-# note to self: test {var: [var+str+var+str, str]}
-
 
 def cfg(app):
 
@@ -11,11 +9,11 @@ def cfg(app):
             'accept': False,
             'cfg_map': {}}
 
-    @app.route('/api/cfg/', methods=['GET'])
+    @app.route('/api/cfg', methods=['GET'])
     def get_grammar():
         return jsonify(response)
 
-    @app.route('/api/cfg/', methods=['POST'])
+    @app.route('/api/cfg', methods=['POST'])
     def is_accepting():
 
         # compute whether the string gets accepted or not

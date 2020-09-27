@@ -10,3 +10,20 @@ class Node:
         self.left_node = left_node
         self.right_node = right_node
         self.char = char
+
+
+def debug_post_order_traversal(node):
+    """
+    ------------------------------------------------------------------
+    binaryTree.debug_post_order_traversal: Prints character stored in
+    each node in post-order.
+    ------------------------------------------------------------------
+    """
+    if node.left_node is not None:  # exists for binary operations
+        debug_post_order_traversal(node.left_node)
+    if node.right_node is not None:  # exists for both binary and unary operations
+        debug_post_order_traversal(node.right_node)
+    if node.char != '':
+        print(node.char)
+    else:
+        print('BLANK NODE')

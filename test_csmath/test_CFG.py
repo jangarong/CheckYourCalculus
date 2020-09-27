@@ -1,5 +1,6 @@
 import unittest
 from csmath.CFG.contextFree import Grammar
+# note to self: test {var: [var+str+var+str, str]}
 
 
 class TestGrammar(unittest.TestCase):
