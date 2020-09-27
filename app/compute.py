@@ -1,31 +1,35 @@
 from flask import request, jsonify
+import json
 from csmath.Computations.compute import Compute
 
 
 def compute(app):
 
-    data = {'equation': '',
+    response = {'equation': '',
             'correct': 'yes'}
     comps = Compute()
 
     @app.route('/api/compute', methods=['GET'])
     def get_eqs():
-        return jsonify(data)
+        return jsonify(response)
 
     @app.route('/api/compute', methods=['POST'])
     def display_eqs():
-        text = request.form['text']
-        data['equation'] = text
-
+        data = json.loads(request.data)
+        text = data['equation']
+        response['equation'] = text
+        if text == "":
+            return jsonify(response)
         # insert equation in computation object
         if comps.current_equation is None:
             comps.new(text)
-            data['correct'] = 'yes'
+            response['correct'] = 'yes'
         else:
             valid = comps.insert(text)
             if valid:
-                data['correct'] = 'yes'
+                response['correct'] = 'yes'
             else:
-                data['correct'] = 'no'
-
-        return jsonify(data)
+                response['correct'] = 'no'
+        #To see response:
+        #print(response['equation'], response['correct'])
+        return jsonify(response)
